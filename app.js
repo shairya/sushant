@@ -1,6 +1,7 @@
-const cron = require("node-cron");
 var express = require('express');
-// var url = require('url');
+const cron = require("node-cron");
+var url = require('url') ;
+var request = require('request');
 // console.log(url.URL
 var app = express();
 var multer = require('multer')
@@ -65,13 +66,37 @@ require('./config/routes.js')(app, passport); // load our routes and pass in our
 
 
 //launch ======================================================================
-
+var order = require('./app/controllers/order');
 // cron to generate report and save in DB
-cron.schedule("5 * * * * *", function() {
-    // set cron here for report and order push
+/*
+    var router = express.Router();
+    router.get('/action', function(req,res){
+        ActionController.action(req, res);
+    });
+ */
+function a(req,res){
+    console.log('in a.......')
+    res.send('/scrape')
+}
+cron.schedule("2 * * * *",()=> {
+    console.log("cron every 2 minute");
+    // request( constant.host+'/scrape', function (error, response, body) {
+    //    if (error){
+    //     console.log('error.....'+error)
+    //    }
+    //    else{
+    //       console.log(body) // Print the google web page.
+    //    }
+    // });
 });
-app.listen(port);
-console.log('The magic happens on port ' + port);
+
+var server = app.listen(port, function () {
+    var host = server.address().address
+    var port = server.address().port
+    
+    console.log("Example app listening at http://%s:%s", host, port)
+ });
+//console.log('The magic happens on port ' + port);
 
 //catch 404 and forward to error handler
 app.use(function (req, res, next) {

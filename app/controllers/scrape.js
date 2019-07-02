@@ -5,6 +5,7 @@ const puppeteer = require('puppeteer');
 var OrderModel = require('../models/order');
 var CounterModel = require('../models/counter');
 var constant = require('../../config/constants');
+var FilelogModel = require('../models/filelog')
 var currentCount = 0;
 var currentDate = '';
 exports.index = async function(req, res, next)
@@ -110,7 +111,7 @@ exports.index = async function(req, res, next)
             await page.waitFor(5000);
             console.log('lets read csv file.............');
             var filename = 'Sale_Orders_' + Math.round((new Date()).getTime() / 1000) + '.csv';
-            var file = await download(fileUrl,__dirname + '../../../public/downloads/orders/' + filename);
+            var file = await download(fileUrl,__dirname + '../../../public/downloads/orders/' + filename, filename);
             console.log(filename);
             const results=[];
     
@@ -287,9 +288,7 @@ getTodayDate = function() {
     return [year, month, day].join('-');
 }
 
-download = async function(url, dest){
-    console.log(url)
-    console.log(dest)
+download = async function(url, dest, filename){
     console.log('download function called..........');
     return new Promise((resolve, reject) => {
         console.log('one....');
@@ -318,6 +317,10 @@ download = async function(url, dest){
         });
 
         file.on("finish", () => {
+            var filelogData = new FilelogModel({originalFileName:url, localFileName: filename});
+            filelogData.save(function(err){
+                if(err) throw err;
+            });
             resolve();
         });
 
