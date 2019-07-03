@@ -64,22 +64,8 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 // routes ======================================================================
 require('./config/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
-
-//launch ======================================================================
-var order = require('./app/controllers/order');
-// cron to generate report and save in DB
-/*
-    var router = express.Router();
-    router.get('/action', function(req,res){
-        ActionController.action(req, res);
-    });
- */
-function a(req,res){
-    console.log('in a.......')
-    res.send('/scrape')
-}
 cron.schedule("2 * * * *",()=> {
-    console.log("cron every 2 minute");
+    console.log("download data from unicommerce");
     // request( constant.host+'/scrape', function (error, response, body) {
     //    if (error){
     //     console.log('error.....'+error)
@@ -90,6 +76,19 @@ cron.schedule("2 * * * *",()=> {
     // });
 });
 
+cron.schedule("2 * * * *",()=> {
+    console.log("push data to maven");
+    // request( constant.host+'/pushorders', function (error, response, body) {
+    //    if (error){
+    //     console.log('error.....'+error)
+    //    }
+    //    else{
+    //       console.log(body) // Print the google web page.
+    //    }
+    // });
+});
+
+//launch ======================================================================
 var server = app.listen(port, function () {
     var host = server.address().address
     var port = server.address().port
