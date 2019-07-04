@@ -110,6 +110,7 @@ var orderSchema = new Schema({
         Fulfillment_TAT: {type: String},
         Channel_Shipping: {type: String},
         Item_Details: {type: String},
+        Tenant_Code: {type: String},
         Pushed_To_Server: {type: String, default:null}
   });
 

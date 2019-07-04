@@ -1,10 +1,16 @@
 module.exports = {
 	"PORT": 3003,
 	"host":"http://localhost:3003",
-	"j_username":'sushant@anscommerce.com',
-	"j_password":'daksh@puri26',
+	"j_username":'sp@anscommerce.com',
+	"j_password":'sushant@123',
 	"url":'https://auth.unicommerce.com/login',
-	"projects":{'9':'secretwish'},
+	"uniCommerceProjects":{
+		'9':{'name':'secretwish','mavenLoginDomain':'anssecretwish','enable':true,'pushOrders':true},
+		'4':{'name':'grandpitstop2','mavenLoginDomain':'ansgps','enable':true,'pushOrders':true},
+		'2':{'name':'anscommerce','mavenLoginDomain':'ansdigital','enable':true,'pushOrders':true},
+		'6':{'name':'markmediums','mavenLoginDomain':'anscultfiction','enable':true,'pushOrders':true},
+		'5':{'name':'jeradobrandsprivatelimited','mavenLoginDomain':'ansdisrupt','enable':true,'pushOrders':true}
+	},
 	"maven_url": "https://anssecretwish.gscmaven.com",
 	"maven_auth_email": "apiintegration@anssecretwish.com",
 	"maven_auth_password": "abcd@1234",

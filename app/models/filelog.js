@@ -7,6 +7,7 @@ var Schema = mongoose.Schema;
 
 var filelogSchema = new Schema({ 
     createAt            : {type: Date, default:dateTimezone},
+    tenantCode          : {type: String},
     originalFileName    : {type: String},
     localFileName       : {type: String},
 });

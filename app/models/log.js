@@ -6,6 +6,7 @@ var Schema = mongoose.Schema;
 
 var logSchema = new Schema({ 
     module      : {type: String},
+    tenantCode  : {type: String},
     objectId    : {type: String},
     subObjectId : {type: String, default:null},
     requestData : {type: String, default:null},

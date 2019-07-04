@@ -8,57 +8,65 @@ var constant = require('../../config/constants');
 var FilelogModel = require('../models/filelog')
 var currentCount = 0;
 var currentDate = '';
+var tenantCode = '';
+var isProjectEnabled = false;
 exports.index = async function(req, res, next)
 {
-    CounterModel.findOne({}, function(err,obj) { 
-        
-        if(obj!==null && obj.count){
-            currentCount = obj.count;currentDate=obj.date
-        }
-    });   
     console.log('lets start............');
-        const USERNAME_SELECTOR = '#username';
-        const PASSWORD_SELECTOR = '#password';
-        const BUTTON_SELECTOR = '#loginForm > input.loginButton';
-        const DATE_RANGE_SELECTOR = 'body > div:nth-child(16) > div.ranges > ul > li:nth-child(5)';
-        const browser = await puppeteer.launch({
-            headless: true
-        });
-        const page = await browser.newPage();
+    const USERNAME_SELECTOR = '#username';
+    const PASSWORD_SELECTOR = '#password';
+    const BUTTON_SELECTOR = '#loginForm > input.loginButton';
+    const DATE_RANGE_SELECTOR = 'body > div:nth-child(16) > div.ranges > ul > li:nth-child(5)';
+    const browser = await puppeteer.launch({
+        headless: true
+    });
+    const page = await browser.newPage();
         
-        console.log('lets login..............');
-        await page.goto(constant.url);
-        await page.waitFor(10*1000);
-        try{    
-            await page.click(USERNAME_SELECTOR);
-            await page.keyboard.type(constant.j_username);
-            await page.click(PASSWORD_SELECTOR);
-            await page.keyboard.type(constant.j_password);
-            const response = await page.click(BUTTON_SELECTOR);
-            console.log('login done..............');
-        }catch(e){
-            console.log('Could not login to server.....!');
-            return;
-        }
-        await page.waitFor(5*1000);
-        for(var i in constant.projects){
+    console.log('lets login..............');
+    await page.goto(constant.url);
+    await page.waitFor(5*1000);
+    try{    
+        await page.click(USERNAME_SELECTOR);
+        await page.keyboard.type(constant.j_username);
+        await page.click(PASSWORD_SELECTOR);
+        await page.keyboard.type(constant.j_password);
+        const response = await page.click(BUTTON_SELECTOR);
+        console.log('login done..............');
+    }catch(e){
+        console.log('login failed, try again.....!');
+        return;
+    }
+
+    await page.waitFor(5*1000);
+    for(var i in constant.uniCommerceProjects){
+        isProjectEnabled = constant.uniCommerceProjects[i].enable;
+        if(isProjectEnabled){       
+            tenantCode = constant.uniCommerceProjects[i].name;
+            CounterModel.findOne({tenantCode:tenantCode}, function(err,obj) { 
+                if(obj!==null && obj.count){
+                    currentCount = obj.count;
+                    currentDate=obj.date
+                }
+            });
             
+            var PROJECT_LIST_PAGE = 'https://auth.unicommerce.com';
             var PROJECT_SELECTOR = '#accountsListContainer > div:nth-child('+i+') > div';
-            var OTHER_REPORT_URL = 'https://' + constant.projects[i] + '.unicommerce.com/tasks/export';
-            var EXPORT_JOBS_URL = 'https://' + constant.projects[i] + '.unicommerce.com/data/user/exportJobs';
+            var OTHER_REPORT_URL = 'https://' + tenantCode + '.unicommerce.com/tasks/export';
+            var EXPORT_JOBS_URL = 'https://' + tenantCode + '.unicommerce.com/data/user/exportJobs';
             
-            console.log('lets select project '+constant.projects[i]+'..............');
+            console.log('lets select project '+ tenantCode +'..............');
             try{
                 await page.click(PROJECT_SELECTOR);
             }catch(e){
-                console.log('Unable to select project......!');
+                console.log('Unable to select project ' + tenantCode + '......!');
                 return;
             }
             await page.waitFor(5*1000);
+
             console.log('lets go to other report page...........');
             
             await page.goto(OTHER_REPORT_URL);
-            await page.waitFor(3000);
+            await page.waitFor(5000);
             const pages = await browser.pages(); // get all open pages by the browser
             const popup = pages[pages.length - 1];
             try {
@@ -66,13 +74,12 @@ exports.index = async function(req, res, next)
                 if(await popup.$('#remindLater')!=null){
                     await popup.click('#remindLater');
                 }
-                console.log('found..........')
+                console.log('close pop..........')
             } catch (error) {
-                console.log("The element didn't appear.")
+                console.log("popup didn't appear this time.........")
             }
-            // await page.waitFor(5*1000);
-    
-            await page.waitFor(15*1000);
+            
+            await page.waitFor(25*1000);
             const frame = await page.frames().find(f => f.name() === 'iframe1');
             await frame.select('#configName','Sale Orders');
             await frame.waitFor(4000);
@@ -87,15 +94,14 @@ exports.index = async function(req, res, next)
             await frame.click('#createJob');
             await page.waitFor(10000);
         
-            
-            console.log('lets get all jobs in json.................')
+            console.log('get all the jobs in json.................')
             await page.goto(EXPORT_JOBS_URL);
             await page.waitFor(3000);
         
             innerText = await page.evaluate(() =>  {
                 return JSON.parse(document.querySelector("body").innerText); 
             }); 
-            console.log('lets get the latest sales order report file...............');
+            console.log('get the latest report file...............');
             var fileUrl = '';
             if(innerText.successful==true){
                 innerText.exportJobs.forEach(function(data, index) {
@@ -107,14 +113,13 @@ exports.index = async function(req, res, next)
                     }
                 });
             }
-            console.log(fileUrl);
+
             await page.waitFor(5000);
-            console.log('lets read csv file.............');
-            var filename = 'Sale_Orders_' + Math.round((new Date()).getTime() / 1000) + '.csv';
+            console.log('read csv file.............');
+            var filename = tenantCode + '_Sale_Orders_' + Math.round((new Date()).getTime() / 1000) + '.csv';
             var file = await download(fileUrl,__dirname + '../../../public/downloads/orders/' + filename, filename);
-            console.log(filename);
             const results=[];
-    
+
             await fs.createReadStream(__dirname + '../../../public/downloads/orders/' + filename)
                 .pipe(csv())
                 .on('data', (data) => {
@@ -123,20 +128,23 @@ exports.index = async function(req, res, next)
                 .on('end', () => {
                     pushDataInDB(results);
             });
+            console.log('go back to project list page..............');
+            await page.goto(PROJECT_LIST_PAGE);
+            await page.waitFor(5000);
         }
-        page.close();
+    }
+    
+    page.close();
     res.send('index.ejs');
 }
 
 pushDataInDB = async function(data){
     var updatedRecord = 0;
     var today = getTodayDate();
-    console.log('this function called..........');
-    console.log(currentCount);
-    console.log(currentDate);
+    
     var counter = 0;
     if(currentDate!=today){
-        CounterModel.deleteMany({}, function(err) {
+        CounterModel.deleteMany({tenantCode:tenantCode}, function(err) {
             if(err) throw err;
         });
         currentCount = 0;
@@ -255,6 +263,7 @@ pushDataInDB = async function(data){
                 elem.Fulfillment_TAT = data[key]['Fulfillment_TAT'];
                 elem.Channel_Shipping = data[key]['Channel_Shipping'];
                 elem.Item_Details = data[key]['Item_Details'];
+                elem.Tenant_Code = tenantCode;
             }
         }
         counter = counter + 1;
@@ -266,10 +275,10 @@ pushDataInDB = async function(data){
             });
         }
     }
-    CounterModel.deleteMany({}, function(err) {
+    CounterModel.deleteMany({tenantCode:tenantCode}, function(err) {
         if(err) throw err;
     });
-    var counterData = new CounterModel({date:today, count: counter});
+    var counterData = new CounterModel({tenantCode:tenantCode, date:today, count: counter});
     counterData.save(function(err){
         if(err) throw err;
     });
@@ -291,12 +300,8 @@ getTodayDate = function() {
 download = async function(url, dest, filename){
     console.log('download function called..........');
     return new Promise((resolve, reject) => {
-        console.log('one....');
         const file = fs.createWriteStream(dest, { flags: "wx" });
-        // console.log(file)
-        console.log('two....');
         const request = https.get(url, response => {
-            console.log('three....');
             if (response.statusCode === 200) {
                 response.pipe(file);
             } else {
@@ -317,7 +322,7 @@ download = async function(url, dest, filename){
         });
 
         file.on("finish", () => {
-            var filelogData = new FilelogModel({originalFileName:url, localFileName: filename});
+            var filelogData = new FilelogModel({tenantCode:tenantCode, originalFileName:url, localFileName: filename});
             filelogData.save(function(err){
                 if(err) throw err;
             });
@@ -327,7 +332,7 @@ download = async function(url, dest, filename){
         file.on("error", err => {
             file.close();
 
-            if (err.code === "EEXIST") {
+            if (err.code === "EXIST") {
                 reject("File already exists");
             } else {
                 fs.unlink(dest, () => {}); // Delete temp file
