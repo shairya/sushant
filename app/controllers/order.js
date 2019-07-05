@@ -134,7 +134,7 @@ getDataFromDB = async function(){
     }
 }
 
-getName = async function(name){
+getName = function(name){
     var customerName = [];
     name = name.trim();
     if(name.indexOf(' ') >= 0)
@@ -162,7 +162,7 @@ prepareData = async function(data){
     
     for( var i=0; i<data.length; i++ ){
         if(previousOrderId!=data[i].Display_Order_Code){
-            var customerName = getName(data[i].Shipping_Address_Name);
+            var customerName = await getName(data[i].Shipping_Address_Name);
             
             if(previousOrderId != data[i].Display_Order_Code && p!=0)
             {
@@ -202,9 +202,6 @@ prepareData = async function(data){
             order.holdDispatch          = 0;
 
             // customer details
-            order.custDetails.customerCode = null;
-            order.custDetails.firstName                     = customerName[0];
-            order.custDetails.lastName                      = customerName[1];
             order.custDetails.customerShippingNature        = "";
             order.custDetails.customerBillingNature         = "";
             order.custDetails.gstin                         = "";
@@ -233,6 +230,9 @@ prepareData = async function(data){
             order.custDetails.billingGstin                  = data[i].Customer_GSTIN;
             order.custDetails.isPrimaryShippingAddress      = "";
             order.custDetails.isPrimaryBillingAddress       = "";
+            order.custDetails.customerCode = null;
+            order.custDetails.firstName                     = customerName[0];
+            order.custDetails.lastName                      = customerName[1];
         }
 
         if(previousItemId==data[i].Item_SKU_Code && previousOrderId==data[i].Display_Order_Code){

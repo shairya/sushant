@@ -3,11 +3,8 @@ const csv = require('csv-parser');
 const fs = require('fs');
 const puppeteer = require('puppeteer');
 var OrderModel = require('../models/order');
-var CounterModel = require('../models/counter');
 var constant = require('../../config/constants');
 var FilelogModel = require('../models/filelog')
-var currentCount = 0;
-var currentDate = '';
 var tenantCode = '';
 var isProjectEnabled = false;
 
@@ -43,12 +40,6 @@ exports.index = async function(req, res, next)
         isProjectEnabled = constant.uniCommerceProjects[i].enable;
         if(isProjectEnabled){       
             tenantCode = constant.uniCommerceProjects[i].name;
-            CounterModel.findOne({tenantCode:tenantCode}, function(err,obj) { 
-                if(obj!==null && obj.count){
-                    currentCount = obj.count;
-                    currentDate=obj.date
-                }
-            });
             
             var PROJECT_LIST_PAGE = 'https://auth.unicommerce.com';
             var PROJECT_SELECTOR = '#accountsListContainer > div:nth-child('+i+') > div';
@@ -80,7 +71,7 @@ exports.index = async function(req, res, next)
                 console.log("popup didn't appear this time.........")
             }
             
-            await page.waitFor(15*1000);
+            await page.waitFor(10*1000);
             const frame = await page.frames().find(f => f.name() === 'iframe1');
             await frame.select('#configName','Sale Orders');
             await frame.waitFor(4000);
@@ -118,10 +109,14 @@ exports.index = async function(req, res, next)
             await page.waitFor(5000);
             console.log('read csv file.............');
             var filename = tenantCode + '_Sale_Orders_' + Math.round((new Date()).getTime() / 1000) + '.csv';
-            var file = await download(fileUrl,__dirname.replace("/app/controllers","") + '/public/downloads/orders/' + filename, filename);
-            const results=[];
+            console.log(filename);
+            console.log(fileUrl)
+            var dest = __dirname.replace('/app/controllers','') + '/public/downloads/orders/' + filename;
+            console.log(dest);
+            var file = await download(fileUrl, dest, filename);
 
-            await fs.createReadStream(__dirname.replace("/app/controllers","") + '/public/downloads/orders/' + filename)
+            const results=[];
+            fs.createReadStream(dest)
                 .pipe(csv())
                 .on('data', (data) => {
                     results.push(data)
@@ -136,154 +131,135 @@ exports.index = async function(req, res, next)
     }
     
     page.close();
-    res.send('index.ejs');
+    res.send('done..........!');
 }
 
 pushDataInDB = async function(data){
     var updatedRecord = 0;
-    var today = getTodayDate();
     
-    var counter = 0;
-    if(currentDate!=today){
-        CounterModel.deleteMany({tenantCode:tenantCode}, function(err) {
-            if(err) throw err;
-        });
-        currentCount = 0;
-    }
-    OrderModel.deleteMany({Pushed_To_Server:"1"}, function(err) {
+    OrderModel.deleteMany({Tenant_Code:tenantCode}, function(err) {
         if(err) throw err;
     });  
     for (var key in data) {
         var elem={};
         for(var k in data[key])
         {
-            if(counter>currentCount || currentCount==0){
-                elem.Sale_Order_Item_Code = data[key]['Sale Order Item Code'];
-                elem.Display_Order_Code = data[key]['Display Order Code'];
-                elem.Reverse_Pickup_Code = data[key]['Reverse Pickup Code'];
-                elem.Reverse_Pickup_Created_Date = data[key]['Reverse Pickup Created Date'];
-                elem.Reverse_Pickup_Reason = data[key]['Reverse Pickup Reason'];
-                elem.Notification_Email = data[key]['Notification Email'];
-                elem.Notification_Mobile = data[key]['Notification Mobile'];
-                elem.Require_Customization = data[key]['Require Customization'];
-                elem.COD = data[key]['COD'];
-                elem.Shipping_Address_Id = data[key]['Shipping Address Id'];
-                elem.Category = data[key]['Category'];
-                elem.Invoice_Code = data[key]['Invoice Code'];
-                elem.Invoice_Created = data[key]['Invoice Created'];
-                elem.Shipping_Address_Name = data[key]['Shipping Address Name'];
-                elem.Shipping_Address_Line_1 = data[key]['Shipping Address Line 1'];
-                elem.Shipping_Address_Line_2 = data[key]['Shipping Address Line 2'];
-                elem.Shipping_Address_City = data[key]['Shipping Address City'];
-                elem.Shipping_Address_State = data[key]['Shipping Address State'];
-                elem.Shipping_Address_Country = data[key]['Shipping Address Country'];
-                elem.Shipping_Address_Pincode = data[key]['Shipping Address Pincode'];
-                elem.Shipping_Address_Phone = data[key]['Shipping Address Phone'];
-                elem.Billing_Address_Id = data[key]['Billing Address Id'];
-                elem.Billing_Address_Name = data[key]['Billing Address Name'];
-                elem.Billing_Address_Line_1 = data[key]['Billing Address Line 1'];
-                elem.Billing_Address_Line_2 = data[key]['Billing Address Line 2'];
-                elem.Billing_Address_City = data[key]['Billing Address City'];
-                elem.Billing_Address_State = data[key]['Billing Address State'];
-                elem.Billing_Address_Country = data[key]['Billing Address Country'];
-                elem.Billing_Address_Pincode = data[key]['Billing Address Pincode'];
-                elem.Billing_Address_Phone = data[key]['Billing Address Phone'];
-                elem.Shipping_Method = data[key]['Shipping Method'];
-                elem.Item_SKU_Code = data[key]['Item SKU Code'];
-                elem.Channel_Product_Id = data[key]['Channel Product Id'];
-                elem.Item_Type_Name = data[key]['Item Type Name'];
-                elem.Item_Type_Color = data[key]['Item Type Color'];
-                elem.Item_Type_Size = data[key]['Item Type Size'];
-                elem.Item_Type_Brand = data[key]['Item Type Brand'];
-                elem.Channel_Name = data[key]['Channel Name'];
-                elem.SKU_Require_Customization = data[key]['SKU Require Customization'];
-                elem.Gift_Wrap = data[key]['Gift Wrap'];
-                elem.Gift_Message = data[key]['Gift Message'];
-                elem.HSN_Code = data[key]['HSN Code'];
-                elem.MRP = data[key]['MRP'];
-                elem.Total_Price = data[key]['Total Price'];
-                elem.Selling_Price = data[key]['Selling Price'];
-                elem.Cost_Price = data[key]['Cost Price'];
-                elem.Prepaid_Amount = data[key]['Prepaid Amount'];
-                elem.Subtotal = data[key]['Subtotal'];
-                elem.Discount = data[key]['Discount'];
-                elem.GST_Tax_Type_Code = data[key]['GST Tax Type Code'];
-                elem.CGST = data[key]['CGST'];
-                elem.IGST = data[key]['IGST'];
-                elem.SGST = data[key]['SGST'];
-                elem.UTGST = data[key]['UTGST'];
-                elem.CESS = data[key]['CESS'];
-                elem.CGST_Rate = data[key]['CGST Rate'];
-                elem.IGST_Rate = data[key]['IGST Rate'];
-                elem.SGST_Rate = data[key]['SGST Rate'];
-                elem.UTGST_Rate = data[key]['UTGST Rate'];
-                elem.CESS_Rate = data[key]['CESS Rate'];
-                elem.Tax = data[key]['Tax %'];
-                elem.Tax_Value = data[key]['Tax Value'];
-                elem.Voucher_Code = data[key]['Voucher Code'];
-                elem.Shipping_Charges = data[key]['Shipping Charges'];
-                elem.Shipping_Method_Charges = data[key]['Shipping Method Charges'];
-                elem.COD_Service_Charges = data[key]['COD Service Charges'];
-                elem.Gift_Wrap_Charges = data[key]['Gift Wrap Charges'];
-                elem.Packet_Number = data[key]['Packet Number'];
-                elem.Order_Date = data[key]['Order Date as dd/mm/yyyy hh:MM:ss'];
-                elem.Sale_Order_Code = data[key]['Sale Order Code'];
-                elem.On_Hold = data[key]['On Hold'];
-                elem.Sale_Order_Status = data[key]['Sale Order Status'];
-                elem.Priority = data[key]['Priority'];
-                elem.Currency = data[key]['Currency'];
-                elem.Currency_Conversion_Rate = data[key]['Currency Conversion Rate'];
-                elem.Sale_Order_Item_Status = data[key]['Sale Order Item Status'];
-                elem.Cancellation_Reason = data[key]['Cancellation_Reason'];
-                elem.Shipping_provider = data[key]['Shipping provider'];
-                elem.Shipping_Arranged_By = data[key]['Shipping Arranged By'];
-                elem.Shipping_Package_Code = data[key]['Shipping_Package_Code'];
-                elem.Shipping_Package_Creation_Date = data[key]['Shipping Package Creation Date'];
-                elem.Shipping_Package_Status_Code = data[key]['Shipping_Package_Status_Code'];
-                elem.Shipping_Package_Type = data[key]['Shipping_Package_Type'];
-                elem.Length = data[key]['Length(mm)'];
-                elem.Width = data[key]['Width(mm)'];
-                elem.Height = data[key]['Height(mm)'];
-                elem.Delivery_Time = data[key]['Delivery Time'];
-                elem.Tracking_Number = data[key]['Tracking Number'];
-                elem.Dispatch_Date = data[key]['Dispatch Date'];
-                elem.Facility = data[key]['Facility'];
-                elem.Return_Date = data[key]['Return Date'];
-                elem.Return_Reason = data[key]['Return Reason'];
-                elem.Created = data[key]['Created'];
-                elem.Updated = data[key]['Updated'];
-                elem.Combination_Identifier = data[key]['Combination Identifier'];
-                elem.Combination_Description = data[key]['Combination_Description'];
-                elem.Transfer_Price = data[key]['Transfer_Price'];
-                elem.Item_Code = data[key]['Item Code'];
-                elem.IMEI = data[key]['IMEI'];
-                elem.Weight = data[key]['Weight'];
-                elem.GSTIN = data[key]['GSTIN'];
-                elem.Customer_GSTIN = data[key]['Customer_GSTIN'];
-                elem.TIN = data[key]['TIN'];
-                elem.Payment_Instrument = data[key]['Payment_Instrument'];
-                elem.Fulfillment_TAT = data[key]['Fulfillment_TAT'];
-                elem.Channel_Shipping = data[key]['Channel_Shipping'];
-                elem.Item_Details = data[key]['Item_Details'];
-                elem.Tenant_Code = tenantCode;
-            }
+            elem.Sale_Order_Item_Code = data[key]['Sale Order Item Code'];
+            elem.Display_Order_Code = data[key]['Display Order Code'];
+            elem.Reverse_Pickup_Code = data[key]['Reverse Pickup Code'];
+            elem.Reverse_Pickup_Created_Date = data[key]['Reverse Pickup Created Date'];
+            elem.Reverse_Pickup_Reason = data[key]['Reverse Pickup Reason'];
+            elem.Notification_Email = data[key]['Notification Email'];
+            elem.Notification_Mobile = data[key]['Notification Mobile'];
+            elem.Require_Customization = data[key]['Require Customization'];
+            elem.COD = data[key]['COD'];
+            elem.Shipping_Address_Id = data[key]['Shipping Address Id'];
+            elem.Category = data[key]['Category'];
+            elem.Invoice_Code = data[key]['Invoice Code'];
+            elem.Invoice_Created = data[key]['Invoice Created'];
+            elem.Shipping_Address_Name = data[key]['Shipping Address Name'];
+            elem.Shipping_Address_Line_1 = data[key]['Shipping Address Line 1'];
+            elem.Shipping_Address_Line_2 = data[key]['Shipping Address Line 2'];
+            elem.Shipping_Address_City = data[key]['Shipping Address City'];
+            elem.Shipping_Address_State = data[key]['Shipping Address State'];
+            elem.Shipping_Address_Country = data[key]['Shipping Address Country'];
+            elem.Shipping_Address_Pincode = data[key]['Shipping Address Pincode'];
+            elem.Shipping_Address_Phone = data[key]['Shipping Address Phone'];
+            elem.Billing_Address_Id = data[key]['Billing Address Id'];
+            elem.Billing_Address_Name = data[key]['Billing Address Name'];
+            elem.Billing_Address_Line_1 = data[key]['Billing Address Line 1'];
+            elem.Billing_Address_Line_2 = data[key]['Billing Address Line 2'];
+            elem.Billing_Address_City = data[key]['Billing Address City'];
+            elem.Billing_Address_State = data[key]['Billing Address State'];
+            elem.Billing_Address_Country = data[key]['Billing Address Country'];
+            elem.Billing_Address_Pincode = data[key]['Billing Address Pincode'];
+            elem.Billing_Address_Phone = data[key]['Billing Address Phone'];
+            elem.Shipping_Method = data[key]['Shipping Method'];
+            elem.Item_SKU_Code = data[key]['Item SKU Code'];
+            elem.Channel_Product_Id = data[key]['Channel Product Id'];
+            elem.Item_Type_Name = data[key]['Item Type Name'];
+            elem.Item_Type_Color = data[key]['Item Type Color'];
+            elem.Item_Type_Size = data[key]['Item Type Size'];
+            elem.Item_Type_Brand = data[key]['Item Type Brand'];
+            elem.Channel_Name = data[key]['Channel Name'];
+            elem.SKU_Require_Customization = data[key]['SKU Require Customization'];
+            elem.Gift_Wrap = data[key]['Gift Wrap'];
+            elem.Gift_Message = data[key]['Gift Message'];
+            elem.HSN_Code = data[key]['HSN Code'];
+            elem.MRP = data[key]['MRP'];
+            elem.Total_Price = data[key]['Total Price'];
+            elem.Selling_Price = data[key]['Selling Price'];
+            elem.Cost_Price = data[key]['Cost Price'];
+            elem.Prepaid_Amount = data[key]['Prepaid Amount'];
+            elem.Subtotal = data[key]['Subtotal'];
+            elem.Discount = data[key]['Discount'];
+            elem.GST_Tax_Type_Code = data[key]['GST Tax Type Code'];
+            elem.CGST = data[key]['CGST'];
+            elem.IGST = data[key]['IGST'];
+            elem.SGST = data[key]['SGST'];
+            elem.UTGST = data[key]['UTGST'];
+            elem.CESS = data[key]['CESS'];
+            elem.CGST_Rate = data[key]['CGST Rate'];
+            elem.IGST_Rate = data[key]['IGST Rate'];
+            elem.SGST_Rate = data[key]['SGST Rate'];
+            elem.UTGST_Rate = data[key]['UTGST Rate'];
+            elem.CESS_Rate = data[key]['CESS Rate'];
+            elem.Tax = data[key]['Tax %'];
+            elem.Tax_Value = data[key]['Tax Value'];
+            elem.Voucher_Code = data[key]['Voucher Code'];
+            elem.Shipping_Charges = data[key]['Shipping Charges'];
+            elem.Shipping_Method_Charges = data[key]['Shipping Method Charges'];
+            elem.COD_Service_Charges = data[key]['COD Service Charges'];
+            elem.Gift_Wrap_Charges = data[key]['Gift Wrap Charges'];
+            elem.Packet_Number = data[key]['Packet Number'];
+            elem.Order_Date = data[key]['Order Date as dd/mm/yyyy hh:MM:ss'];
+            elem.Sale_Order_Code = data[key]['Sale Order Code'];
+            elem.On_Hold = data[key]['On Hold'];
+            elem.Sale_Order_Status = data[key]['Sale Order Status'];
+            elem.Priority = data[key]['Priority'];
+            elem.Currency = data[key]['Currency'];
+            elem.Currency_Conversion_Rate = data[key]['Currency Conversion Rate'];
+            elem.Sale_Order_Item_Status = data[key]['Sale Order Item Status'];
+            elem.Cancellation_Reason = data[key]['Cancellation_Reason'];
+            elem.Shipping_provider = data[key]['Shipping provider'];
+            elem.Shipping_Arranged_By = data[key]['Shipping Arranged By'];
+            elem.Shipping_Package_Code = data[key]['Shipping_Package_Code'];
+            elem.Shipping_Package_Creation_Date = data[key]['Shipping Package Creation Date'];
+            elem.Shipping_Package_Status_Code = data[key]['Shipping_Package_Status_Code'];
+            elem.Shipping_Package_Type = data[key]['Shipping_Package_Type'];
+            elem.Length = data[key]['Length(mm)'];
+            elem.Width = data[key]['Width(mm)'];
+            elem.Height = data[key]['Height(mm)'];
+            elem.Delivery_Time = data[key]['Delivery Time'];
+            elem.Tracking_Number = data[key]['Tracking Number'];
+            elem.Dispatch_Date = data[key]['Dispatch Date'];
+            elem.Facility = data[key]['Facility'];
+            elem.Return_Date = data[key]['Return Date'];
+            elem.Return_Reason = data[key]['Return Reason'];
+            elem.Created = data[key]['Created'];
+            elem.Updated = data[key]['Updated'];
+            elem.Combination_Identifier = data[key]['Combination Identifier'];
+            elem.Combination_Description = data[key]['Combination_Description'];
+            elem.Transfer_Price = data[key]['Transfer_Price'];
+            elem.Item_Code = data[key]['Item Code'];
+            elem.IMEI = data[key]['IMEI'];
+            elem.Weight = data[key]['Weight'];
+            elem.GSTIN = data[key]['GSTIN'];
+            elem.Customer_GSTIN = data[key]['Customer_GSTIN'];
+            elem.TIN = data[key]['TIN'];
+            elem.Payment_Instrument = data[key]['Payment_Instrument'];
+            elem.Fulfillment_TAT = data[key]['Fulfillment_TAT'];
+            elem.Channel_Shipping = data[key]['Channel_Shipping'];
+            elem.Item_Details = data[key]['Item_Details'];
+            elem.Tenant_Code = tenantCode;
         }
-        counter = counter + 1;
-        if(counter>currentCount){
-            updatedRecord = updatedRecord+1;
-            var orderData = new OrderModel(elem);
-            orderData.save(function(err){
-                if(err) throw err;
-            });
-        }
+
+        updatedRecord = updatedRecord+1;
+        var orderData = new OrderModel(elem);
+        orderData.save(function(err){
+            if(err) throw err;
+        });
     }
-    CounterModel.deleteMany({tenantCode:tenantCode}, function(err) {
-        if(err) throw err;
-    });
-    var counterData = new CounterModel({tenantCode:tenantCode, date:today, count: counter});
-    counterData.save(function(err){
-        if(err) throw err;
-    });
     console.log(updatedRecord + ' records updated in DB............');
 }
 
