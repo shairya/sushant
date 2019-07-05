@@ -6,22 +6,74 @@ var tenantCode = '';
 var mavenLoginDomain = '';
 var serverCookie = '';
 
-exports.index = async function(req, res, next)
-{
-    for(var i in constant.uniCommerceProjects){
-        if(constant.uniCommerceProjects[i].pushOrders==true){
-            tenantCode = constant.uniCommerceProjects[i].name;
-            mavenLoginDomain = constant.uniCommerceProjects[i].mavenLoginDomain;
-            await sendAuthRequest();
-        }
+exports.gps = async function(req, res, next){
+    console.log('gpsorders......')
+    var id = 2;
+    if(constant.uniCommerceProjects[id].pushOrders==true){
+        tenantCode = constant.uniCommerceProjects[id].name;
+        mavenLoginDomain = constant.uniCommerceProjects[id].mavenLoginDomain;
+        console.log('lets call auth api first...........' + tenantCode)
+            sendAuthRequest()
     }
-    
-    res.send('are we done........?');
     return;
 }
 
-sendAuthRequest = async function(){
-    console.log('lets call auth api first...........')
+exports.anscommerce = async function(req, res, next){
+    console.log('gpsorders......')
+    var id = 1;
+    if(constant.uniCommerceProjects[id].pushOrders==true){
+        tenantCode = constant.uniCommerceProjects[id].name;
+        mavenLoginDomain = constant.uniCommerceProjects[id].mavenLoginDomain;
+        console.log('lets call auth api first...........' + tenantCode)
+            sendAuthRequest()
+    }
+    return;
+}
+
+exports.jerado = async function(req, res, next){
+    console.log('gpsorders......')
+    var id = 3;
+    if(constant.uniCommerceProjects[id].pushOrders==true){
+        tenantCode = constant.uniCommerceProjects[id].name;
+        mavenLoginDomain = constant.uniCommerceProjects[id].mavenLoginDomain;
+        console.log('lets call auth api first...........' + tenantCode)
+            sendAuthRequest()
+    }
+    return;
+}
+
+exports.markmediums = async function(req, res, next){
+    console.log('gpsorders......')
+    var id = 4;
+    if(constant.uniCommerceProjects[id].pushOrders==true){
+        tenantCode = constant.uniCommerceProjects[id].name;
+        mavenLoginDomain = constant.uniCommerceProjects[id].mavenLoginDomain;
+        console.log('lets call auth api first...........' + tenantCode)
+            sendAuthRequest()
+    }
+    return;
+}
+
+exports.secretwish = async function(req, res, next){
+    console.log('gpsorders......')
+    var id = 5;
+    if(constant.uniCommerceProjects[id].pushOrders==true){
+        tenantCode = constant.uniCommerceProjects[id].name;
+        mavenLoginDomain = constant.uniCommerceProjects[id].mavenLoginDomain;
+        console.log('lets call auth api first...........' + tenantCode)
+            sendAuthRequest()
+    }
+    return;
+}
+
+exports.index = async function(req, res, next)
+{
+    console.log('ahh haaaa....don\'t call me, i am not going to do anything for you........!');
+    return;
+}
+
+sendAuthRequest = function(){
+    console.log('auth call...........')
     var options = { 
         method: 'POST',
         rejectUnauthorized: false, 
@@ -30,13 +82,13 @@ sendAuthRequest = async function(){
         { 
             'cache-control': 'no-cache',
             'Connection': 'keep-alive',
-            'content-length': '61',
+            // 'content-length': '61',
             'accept-encoding': 'gzip, deflate',
             'Host': mavenLoginDomain + '.gscmaven.com',
-            'Postman-Token': 'bcd22405-b1af-4352-a303-c8efa122df3d,0c6e18b7-934e-43c3-aefa-61c71d7c0b58',
+            // 'Postman-Token': 'bcd22405-b1af-4352-a303-c8efa122df3d,0c6e18b7-934e-43c3-aefa-61c71d7c0b58',
             'Cache-Control': 'no-cache',
             'Accept': '/',
-            'User-Agent': 'PostmanRuntime/7.15.0',
+            // 'User-Agent': 'PostmanRuntime/7.15.0',
             'Referer': 'https://'+mavenLoginDomain+'.gscmaven.com',
             'Content-Type': 'application/x-www-form-urlencoded' 
         },
@@ -46,13 +98,15 @@ sendAuthRequest = async function(){
             password: constant.maven_auth_password
         } 
     };
-
+// console.log(options)
     request(options, function (error, response, body) {
         if (error) 
         {
             console.log(error)
         }else{
+            // console.log(response.headers)
             serverCookie = response.headers.cookie;
+            console.log('cookie....:'+serverCookie)
             getDataFromDB();
         }
     });
@@ -61,19 +115,23 @@ sendAuthRequest = async function(){
 getDataFromDB = async function(){
     if(serverCookie){
         console.log(tenantCode)
-    await OrderModel.find({Pushed_To_Server:null, Tenant_Code: tenantCode}).sort({
-        Display_Order_Code: 1,Item_SKU_Code:1}).exec(function(err, docs){
-            console.log('records fetched: .........'+docs.length);
-            //console.log(docs);
-            prepareData(docs)
-        }); 
+        await OrderModel.find({Pushed_To_Server:null, Tenant_Code: tenantCode}).sort({
+            Display_Order_Code: 1,Item_SKU_Code:1,Tenant_Code:1}).exec(function(err, docs){
+                console.log('records fetched: .........' + docs.length);
+                if(docs.length>0){
+                    prepareData(docs);
+                }else{
+                    console.log('no records found for ' + tenantCode);
+                }
+            }); 
     }else{
-        console.log('authentication failed..............!');
+        console.log('authentication failed for ' + tenantCode+'..............!');
     }
 }
 
 getName = async function(name){
     var customerName = [];
+    name = name.trim();
     if(name.indexOf(' ') >= 0)
     {
         var nameArray = name.split(' ');
@@ -98,9 +156,6 @@ prepareData = async function(data){
     var p=0;
     
     for( var i=0; i<data.length; i++ ){
-        if(data[i].Display_Order_Code=='171-2054635-2128327'){
-            console.log(data);
-        }
         if(previousOrderId!=data[i].Display_Order_Code){
             var customerName = getName(data[i].Shipping_Address_Name);
             
@@ -109,18 +164,17 @@ prepareData = async function(data){
                 sendData(order);
             }
           
-            var shippingCity = data[i].Shipping_Address_City.replace(/[^\w\s]/gi, ' ');
-            shippingCity = shippingCity.replace(/\d/g, "");
-            shippingCity = shippingCity.replace(/_/g, "");
-            var shippingAddress1 = data[i].Shipping_Address_Line_1.replace(/[^\w\s]/gi, ' ');
-            var shippingAddress2 = data[i].Shipping_Address_Line_2.replace(/[^\w\s]/gi, ' ');
+            var shippingCity = data[i].Shipping_Address_City.replace(/[&\/\\#,‘’+()$~%.'":*?<>{}\n]/g,' ');
+            if(shippingCity.length>45){
+                shippingCity = shippingCity.substring(0,44);
+            }
+            var shippingAddress1 = data[i].Shipping_Address_Line_1.replace(/[&\/\\#,‘’+()$~%.'":*?_<>{}\n]/g,' ');
+            var shippingAddress2 = data[i].Shipping_Address_Line_2.replace(/[&\/\\#,‘’+()$~%.''":*?_<>{}\n]/g,' ');
 
-            var billingCity = data[i].Billing_Address_City.replace(/[^\w\s]/gi, ' ');
-            billingCity = billingCity.replace(/\d/g, "");
-            billingCity = billingCity.replace(/-/g, "");
-            var billingAddress1 = data[i].Billing_Address_Line_1.replace(/[^\w\s]/gi, ' ');
-            var billingAddress2 = data[i].Billing_Address_Line_2.replace(/[^\w\s]/gi, ' ');
-            if(data[i].Shipping_Address_Phone.indexOf('X') >= 0){
+            var billingCity = data[i].Billing_Address_City.replace(/[^a-zA-Z0-9]/g,'_');
+            var billingAddress1 = data[i].Billing_Address_Line_1.replace(/[&\/\\#,+‘’()$~%.'":*?<>_{}\n]/g,' ');
+            var billingAddress2 = data[i].Billing_Address_Line_2.replace(/[&\/\\#,+‘’()$~%.'":*?<>_{}\n]/g,' ');
+            if(data[i].Shipping_Address_Phone.indexOf('X') >= 0 || data[i].Shipping_Address_Phone.indexOf(' ') >= 0 || data[i].Shipping_Address_Phone.length != 10){
                 phoneNumber = '9999999999';
             }else{
                 phoneNumber = data[i].Shipping_Address_Phone;
@@ -144,8 +198,8 @@ prepareData = async function(data){
 
             // customer details
             order.custDetails.customerCode = null;
-            order.custDetails.firstName                     = data[i].Shipping_Address_Name.replace(/[^\w\s]/gi, '');
-            order.custDetails.lastName                      = 'ans';//customerName[1] ? customerName[1].replace(/[^\w\s]/gi, '') : '';
+            order.custDetails.firstName                     = customerName[0];
+            order.custDetails.lastName                      = customerName[1];
             order.custDetails.customerShippingNature        = "";
             order.custDetails.customerBillingNature         = "";
             order.custDetails.gstin                         = "";
@@ -177,16 +231,8 @@ prepareData = async function(data){
         }
 
         if(previousItemId==data[i].Item_SKU_Code && previousOrderId==data[i].Display_Order_Code){
-            if(data[i].Display_Order_Code=='408-4099223-7393146')
-            {
-                console.log('in quantity.......')
-            }
             item.quantity               = parseInt(item.quantity) + 1;
         }else{
-            if(data[i].Display_Order_Code=='408-4099223-7393146')
-            {
-                console.log('in else part.......')
-            }
             var item = {};
             item.quantity               = 1;
             item.sellingPricePerItem    = parseInt(data[i].Selling_Price);
@@ -205,7 +251,7 @@ prepareData = async function(data){
             item.mrp                    = "";
             order.orderItems.push(item);
         }
-        previousItemId=data[i].Item_SKU_Code;
+        previousItemId      = data[i].Item_SKU_Code;
         previousOrderId     = data[i].Display_Order_Code;
         
         if((i+1)==data.length){
@@ -241,9 +287,7 @@ sendData = async function(postData){
         json: postData, 
         rejectUnauthorized: false
     };
-    if(postData.orderId=='8649003110'){
-        console.log(postData);
-    }
+    
     request(options, function (error, response, body) {
         if (error) 
         {
@@ -274,12 +318,7 @@ sendData = async function(postData){
                         {Display_Order_Code:postData.orderId}, 
                         { Pushed_To_Server: 2 }, 
                         { multi: true }, 
-                        function(err, res) {
-                            if (err) { 
-                                console.log(err);
-                            } else { 
-                            }
-                        }
+                        function(err, res) { if (err) { console.log(err); } else { }}
                     );
                 });
             }else{

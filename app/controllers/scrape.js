@@ -10,6 +10,7 @@ var currentCount = 0;
 var currentDate = '';
 var tenantCode = '';
 var isProjectEnabled = false;
+
 exports.index = async function(req, res, next)
 {
     console.log('lets start............');
@@ -79,7 +80,7 @@ exports.index = async function(req, res, next)
                 console.log("popup didn't appear this time.........")
             }
             
-            await page.waitFor(25*1000);
+            await page.waitFor(15*1000);
             const frame = await page.frames().find(f => f.name() === 'iframe1');
             await frame.select('#configName','Sale Orders');
             await frame.waitFor(4000);
@@ -117,10 +118,10 @@ exports.index = async function(req, res, next)
             await page.waitFor(5000);
             console.log('read csv file.............');
             var filename = tenantCode + '_Sale_Orders_' + Math.round((new Date()).getTime() / 1000) + '.csv';
-            var file = await download(fileUrl,__dirname + '../../../public/downloads/orders/' + filename, filename);
+            var file = await download(fileUrl,__dirname.replace("/app/controllers","") + '/public/downloads/orders/' + filename, filename);
             const results=[];
 
-            await fs.createReadStream(__dirname + '../../../public/downloads/orders/' + filename)
+            await fs.createReadStream(__dirname.replace("/app/controllers","") + '/public/downloads/orders/' + filename)
                 .pipe(csv())
                 .on('data', (data) => {
                     results.push(data)
@@ -149,9 +150,10 @@ pushDataInDB = async function(data){
         });
         currentCount = 0;
     }
-    
+    OrderModel.deleteMany({Pushed_To_Server:"1"}, function(err) {
+        if(err) throw err;
+    });  
     for (var key in data) {
-        // check if the property/key is defined in the object itself, not in parent
         var elem={};
         for(var k in data[key])
         {
@@ -322,6 +324,7 @@ download = async function(url, dest, filename){
         });
 
         file.on("finish", () => {
+            console.log('file download done............?');
             var filelogData = new FilelogModel({tenantCode:tenantCode, originalFileName:url, localFileName: filename});
             filelogData.save(function(err){
                 if(err) throw err;
@@ -330,6 +333,7 @@ download = async function(url, dest, filename){
         });
 
         file.on("error", err => {
+            console.log('file download error............?');
             file.close();
 
             if (err.code === "EXIST") {

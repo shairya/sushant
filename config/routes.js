@@ -8,7 +8,12 @@ module.exports = function (app, passport) {
 
     app.get('/', scrape.index, scrape.index);//home
     app.get('/pushorders', order.index, order.index);
-    app.get('/scrape', scrape.index, scrape.index);//home
+    app.get('/scrape', scrape.index, scrape.index);
+    app.get('/push/gps', order.gps, order.gps);//home
+    app.get('/push/anscommerce', order.anscommerce, order.anscommerce);//home
+    app.get('/push/jerado', order.jerado, order.jerado);//home
+    app.get('/push/markmediums', order.markmediums, order.markmediums);//home
+    app.get('/push/secretwish', order.secretwish, order.secretwish);//home
     app.get('/login', home.login);
     app.get('/signup', home.signup);
 
