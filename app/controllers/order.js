@@ -6,6 +6,19 @@ var tenantCode = '';
 var mavenLoginDomain = '';
 var serverCookie = '';
 
+exports.anscommerce = async function(req, res, next){
+    console.log('anscommerce......')
+    var id = 1;
+    if(constant.uniCommerceProjects[id].pushOrders==true){
+        tenantCode = constant.uniCommerceProjects[id].name;
+        mavenLoginDomain = constant.uniCommerceProjects[id].mavenLoginDomain;
+        console.log('lets call auth api first...........' + tenantCode)
+            sendAuthRequest()
+    }
+    res.send('ans done.....!');
+    return;
+}
+
 exports.gps = async function(req, res, next){
     console.log('gpsorders......')
     var id = 2;
@@ -15,23 +28,12 @@ exports.gps = async function(req, res, next){
         console.log('lets call auth api first...........' + tenantCode)
             sendAuthRequest()
     }
-    return;
-}
-
-exports.anscommerce = async function(req, res, next){
-    console.log('gpsorders......')
-    var id = 1;
-    if(constant.uniCommerceProjects[id].pushOrders==true){
-        tenantCode = constant.uniCommerceProjects[id].name;
-        mavenLoginDomain = constant.uniCommerceProjects[id].mavenLoginDomain;
-        console.log('lets call auth api first...........' + tenantCode)
-            sendAuthRequest()
-    }
+    res.send('gps done.....!');
     return;
 }
 
 exports.jerado = async function(req, res, next){
-    console.log('gpsorders......')
+    console.log('jerado......')
     var id = 3;
     if(constant.uniCommerceProjects[id].pushOrders==true){
         tenantCode = constant.uniCommerceProjects[id].name;
@@ -39,11 +41,12 @@ exports.jerado = async function(req, res, next){
         console.log('lets call auth api first...........' + tenantCode)
             sendAuthRequest()
     }
+    res.send('jerado done.....!');
     return;
 }
 
 exports.markmediums = async function(req, res, next){
-    console.log('gpsorders......')
+    console.log('markmediums......')
     var id = 4;
     if(constant.uniCommerceProjects[id].pushOrders==true){
         tenantCode = constant.uniCommerceProjects[id].name;
@@ -51,11 +54,12 @@ exports.markmediums = async function(req, res, next){
         console.log('lets call auth api first...........' + tenantCode)
             sendAuthRequest()
     }
+    res.send('markmediums done.....!');
     return;
 }
 
 exports.secretwish = async function(req, res, next){
-    console.log('gpsorders......')
+    console.log('secretwish......')
     var id = 5;
     if(constant.uniCommerceProjects[id].pushOrders==true){
         tenantCode = constant.uniCommerceProjects[id].name;
@@ -63,6 +67,7 @@ exports.secretwish = async function(req, res, next){
         console.log('lets call auth api first...........' + tenantCode)
             sendAuthRequest()
     }
+    res.send('secretwish done.....!');
     return;
 }
 
