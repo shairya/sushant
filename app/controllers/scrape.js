@@ -82,7 +82,7 @@ exports.index = async function(req, res, next)
             await frame.click(DATE_RANGE_SELECTOR);
             
             await frame.click('#filter-5');
-            await frame.select('#filter-status', 'CREATED','FULFILLABLE','UNFULFILLABLE');
+            await frame.select('#filter-status', 'CREATED','FULFILLABLE','UNFULFILLABLE','DISPATCHED');
             await frame.click('#createJob');
             await page.waitFor(10000);
         
