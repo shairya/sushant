@@ -7,7 +7,6 @@ var mavenLoginDomain = '';
 var serverCookie = '';
 var allData=[];
 exports.anscommerce = async function(req, res, next){
-    //for(var id in constant.uniCommerceProjects){
         var id = 1;
         if(constant.uniCommerceProjects[id].pushOrders==true){
             tenantCode = constant.uniCommerceProjects[id].name;
@@ -17,8 +16,7 @@ exports.anscommerce = async function(req, res, next){
         }else{
             console.log(tenantCode + 'not enable in config.....')
         }
-    //}
-    res.send(tenantCode + ' done.....!');
+    res.redirect('/orders');
     return;
 }
 
@@ -32,7 +30,7 @@ exports.gps = async function(req, res, next){
     }else{
         console.log(tenantCode + 'not enable in config.....')
     }
-    res.send(tenantCode + ' done.....!');
+    res.redirect('/orders');
     return;
 }
 
@@ -46,7 +44,7 @@ exports.jerado = async function(req, res, next){
     }else{
         console.log(tenantCode + 'not enable in config.....')
     }
-    res.send(tenantCode + ' done.....!');
+    res.redirect('/orders');
     return;
 }
 
@@ -60,7 +58,7 @@ exports.markmediums = async function(req, res, next){
     }else{
         console.log(tenantCode + 'not enable in config.....')
     }
-    res.send(tenantCode + ' done.....!');
+    res.redirect('/orders');
     return;
 }
 
@@ -74,7 +72,7 @@ exports.secretwish = async function(req, res, next){
     }else{
         console.log(tenantCode + 'not enable in config.....')
     }
-    res.send(tenantCode + ' done.....!');
+    res.redirect('/orders');
     return;
 }
 

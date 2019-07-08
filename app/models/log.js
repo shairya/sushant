@@ -13,7 +13,7 @@ var logSchema = new Schema({
     responseData : {type: String, default:null},
     status      : {type: String},
     edited      : {type: String, default:'no'},
-    createdAt   : {type: Date, default:dateTimezone}
+    createdAt   : {type: Date, default:new Date(+new Date() + 1000 * 60 * 330)}
 });
 
 var Log = mongoose.model('Log', logSchema);

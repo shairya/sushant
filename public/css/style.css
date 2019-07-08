@@ -191,7 +191,8 @@ img { max-width: 100%; }
 	h1, h2 { font-size: 32px; }
 
 }
-table.tableClass tr td {padding:5px;}
+table.tableClass tr {text-align: left}
+table.tableClass tr td, table.tableClass tr th {padding:5px;text-align: left}
 td.first_td{width:30%}
 textarea, .inputBox{padding:5px;width:50%}
 td.notEdited{color:#ff0000}

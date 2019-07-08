@@ -111,7 +111,8 @@ var orderSchema = new Schema({
         Channel_Shipping: {type: String},
         Item_Details: {type: String},
         Tenant_Code: {type: String},
-        Pushed_To_Server: {type: String, default:null}
+        Pushed_To_Server: {type: String, default:null},
+        Import_Date   : {type: Date, default:new Date(+new Date() + 1000 * 60 * 330)}
   });
 
   var Order = mongoose.model('Order', orderSchema);

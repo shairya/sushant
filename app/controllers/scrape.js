@@ -1,137 +1,196 @@
 var https = require('https');
 const csv = require('csv-parser');  
+const moment = require('moment-timezone');
 const fs = require('fs');
 const puppeteer = require('puppeteer');
 var OrderModel = require('../models/order');
 var constant = require('../../config/constants');
 var FilelogModel = require('../models/filelog')
 var tenantCode = '';
-var isProjectEnabled = false;
+var projectId = '';
+var page = '';
+var browser = '';
+exports.secretwish = async function(req, res, next){
+    projectId = 5;
+    if(constant.uniCommerceProjects[projectId].enable==true){
+        tenantCode = constant.uniCommerceProjects[projectId].name;
+        await login(tenantCode);
+    }else{
+        console.log('import is not enable for.....' + tenantCode)
+    }
+    
+    res.redirect('/test');
+    return;
+}
 
-exports.index = async function(req, res, next)
-{
-    console.log('lets start............');
+exports.gps = async function(req, res, next){
+    projectId = 2;
+    if(constant.uniCommerceProjects[projectId].enable==true){
+        tenantCode = constant.uniCommerceProjects[projectId].name;
+        await login(tenantCode);
+    }else{
+        console.log('import is not enable for.....' + tenantCode)
+    }
+    console.log('are we done.....?');
+    res.redirect('/test');
+    return;
+}
+
+exports.jerado = async function(req, res, next){
+    projectId = 3;
+    if(constant.uniCommerceProjects[projectId].enable==true){
+        tenantCode = constant.uniCommerceProjects[projectId].name;
+        await login(tenantCode);
+    }else{
+        console.log('import is not enable for.....' + tenantCode)
+    }
+    console.log('are we done.....?');
+    res.redirect('/test');
+    return;
+}
+
+exports.markmediums = async function(req, res, next){
+    projectId = 4;
+    if(constant.uniCommerceProjects[projectId].enable==true){
+        tenantCode = constant.uniCommerceProjects[projectId].name;
+        await login(tenantCode);
+    }else{
+        console.log('import is not enable for.....' + tenantCode)
+    }
+    console.log('are we done.....?');
+    res.redirect('/test');
+    return;
+}
+
+exports.anscommerce = async function(req, res, next){
+    projectId = 1;
+    if(constant.uniCommerceProjects[projectId].enable==true){
+        tenantCode = constant.uniCommerceProjects[projectId].name;
+        await login(tenantCode);
+    }else{
+        console.log('import is not enable for.....' + tenantCode)
+    }
+    console.log('are we done.....?');
+    res.redirect('/test');
+    return;
+}
+
+login = async function(tenantCode){
+    console.log('lets login for ............' + tenantCode);
     const USERNAME_SELECTOR = '#username';
     const PASSWORD_SELECTOR = '#password';
     const BUTTON_SELECTOR = '#loginForm > input.loginButton';
-    const DATE_RANGE_SELECTOR = 'body > div:nth-child(16) > div.ranges > ul > li:nth-child(5)';
-    const browser = await puppeteer.launch({
+    
+    browser = await puppeteer.launch({
         headless: true
     });
-    const page = await browser.newPage();
-        
-    console.log('lets login..............');
+    page = await browser.newPage();
     await page.goto(constant.url);
     await page.waitFor(5*1000);
-    try{    
-        await page.click(USERNAME_SELECTOR);
-        await page.keyboard.type(constant.j_username);
-        await page.click(PASSWORD_SELECTOR);
-        await page.keyboard.type(constant.j_password);
-        const response = await page.click(BUTTON_SELECTOR);
-        console.log('login done..............');
+    
+    await page.click(USERNAME_SELECTOR);
+    await page.keyboard.type(constant.j_username);
+    await page.click(PASSWORD_SELECTOR);
+    await page.keyboard.type(constant.j_password);
+    const response = await page.click(BUTTON_SELECTOR);
+    console.log('login done..............'+response);
+    await scrape();
+
+}
+
+scrape = async function(req, res, next)
+{
+    console.log('scraping........')
+    await page.waitFor(5*1000);     
+    tenantCode = constant.uniCommerceProjects[projectId].name;
+    const DATE_RANGE_SELECTOR = 'body > div:nth-child(16) > div.ranges > ul > li:nth-child(5)';        
+    var PROJECT_LIST_PAGE = 'https://auth.unicommerce.com';
+    var PROJECT_SELECTOR = '#accountsListContainer > div:nth-child('+projectId+') > div';
+    var OTHER_REPORT_URL = 'https://' + tenantCode + '.unicommerce.com/tasks/export';
+    var EXPORT_JOBS_URL = 'https://' + tenantCode + '.unicommerce.com/data/user/exportJobs';
+    
+    console.log('lets select project '+ tenantCode + '..............');
+    try{
+        await page.click(PROJECT_SELECTOR);
     }catch(e){
-        console.log('login failed, try again.....!');
+        console.log('Unable to select project ' + tenantCode + '......!');
         return;
     }
-
     await page.waitFor(5*1000);
-    for(var i in constant.uniCommerceProjects){
-        isProjectEnabled = constant.uniCommerceProjects[i].enable;
-        if(isProjectEnabled){       
-            tenantCode = constant.uniCommerceProjects[i].name;
-            
-            var PROJECT_LIST_PAGE = 'https://auth.unicommerce.com';
-            var PROJECT_SELECTOR = '#accountsListContainer > div:nth-child('+i+') > div';
-            var OTHER_REPORT_URL = 'https://' + tenantCode + '.unicommerce.com/tasks/export';
-            var EXPORT_JOBS_URL = 'https://' + tenantCode + '.unicommerce.com/data/user/exportJobs';
-            
-            console.log('lets select project '+ tenantCode +'..............');
-            try{
-                await page.click(PROJECT_SELECTOR);
-            }catch(e){
-                console.log('Unable to select project ' + tenantCode + '......!');
-                return;
-            }
-            await page.waitFor(5*1000);
 
-            console.log('lets go to other report page...........');
-            
-            await page.goto(OTHER_REPORT_URL);
-            await page.waitFor(5000);
-            const pages = await browser.pages(); // get all open pages by the browser
-            const popup = pages[pages.length - 1];
-            try {
-                await popup.waitForSelector('#remindLater', {timeout:3000});
-                if(await popup.$('#remindLater')!=null){
-                    await popup.click('#remindLater');
-                }
-                console.log('close pop..........')
-            } catch (error) {
-                console.log("popup didn't appear this time.........")
-            }
-            
-            await page.waitFor(10*1000);
-            const frame = await page.frames().find(f => f.name() === 'iframe1');
-            await frame.select('#configName','Sale Orders');
-            await frame.waitFor(4000);
-            await frame.click('#all');
-            await frame.click('#filter-1');
-            await frame.click('#filter-addedOn');
-            
-            await frame.click(DATE_RANGE_SELECTOR);
-            
-            await frame.click('#filter-5');
-            await frame.select('#filter-status', 'CREATED','FULFILLABLE','UNFULFILLABLE','DISPATCHED');
-            await frame.click('#createJob');
-            await page.waitFor(10000);
-        
-            console.log('get all the jobs in json.................')
-            await page.goto(EXPORT_JOBS_URL);
-            await page.waitFor(3000);
-        
-            innerText = await page.evaluate(() =>  {
-                return JSON.parse(document.querySelector("body").innerText); 
-            }); 
-            console.log('get the latest report file...............');
-            var fileUrl = '';
-            if(innerText.successful==true){
-                innerText.exportJobs.forEach(function(data, index) {
-                    if(data.name=='Sale Orders' && data.statusCode=='COMPLETE' && fileUrl==''){
-                        {
-                            fileUrl = data.exportFilePath;
-                            return;
-                        }
-                    }
-                });
-            }
-
-            await page.waitFor(5000);
-            console.log('read csv file.............');
-            var filename = tenantCode + '_Sale_Orders_' + Math.round((new Date()).getTime() / 1000) + '.csv';
-            console.log(filename);
-            console.log(fileUrl)
-            var dest = __dirname.replace('/app/controllers','') + '/public/downloads/orders/' + filename;
-            console.log(dest);
-            var file = await download(fileUrl, dest, filename);
-
-            const results=[];
-            fs.createReadStream(dest)
-                .pipe(csv())
-                .on('data', (data) => {
-                    results.push(data)
-                })
-                .on('end', () => {
-                    pushDataInDB(results);
-            });
-            console.log('go back to project list page..............');
-            await page.goto(PROJECT_LIST_PAGE);
-            await page.waitFor(5000);
+    console.log('lets go to other report page...........');
+    
+    await page.goto(OTHER_REPORT_URL);
+    await page.waitFor(5000);
+    const pages = await browser.pages(); // get all open pages by the browser
+    const popup = pages[pages.length - 1];
+    try {
+        await popup.waitForSelector('#remindLater', {timeout:3000});
+        if(await popup.$('#remindLater')!=null){
+            await popup.click('#remindLater');
         }
+        console.log('close pop..........')
+    } catch (error) {
+        console.log("popup didn't appear this time.........")
     }
     
+    await page.waitFor(10*1000);
+    const frame = await page.frames().find(f => f.name() === 'iframe1');
+    await frame.select('#configName','Sale Orders');
+    await frame.waitFor(4000);
+    await frame.click('#all');
+    await frame.click('#filter-1');
+    await frame.click('#filter-addedOn');
+    
+    await frame.click(DATE_RANGE_SELECTOR);
+    
+    await frame.click('#filter-5');
+    await frame.select('#filter-status', 'CREATED','FULFILLABLE','UNFULFILLABLE','DISPATCHED');
+    await frame.click('#createJob');
+    await page.waitFor(10000);
+
+    console.log('get all the jobs in json.................')
+    await page.goto(EXPORT_JOBS_URL);
+    await page.waitFor(3000);
+
+    innerText = await page.evaluate(() =>  {
+        return JSON.parse(document.querySelector("body").innerText); 
+    }); 
+    console.log('get the latest report file...............');
+    var fileUrl = '';
+    if(innerText.successful==true){
+        innerText.exportJobs.forEach(function(data, index) {
+            if(data.name=='Sale Orders' && data.statusCode=='COMPLETE' && fileUrl==''){
+                {
+                    fileUrl = data.exportFilePath;
+                    return;
+                }
+            }
+        });
+    }
+
+    await page.waitFor(5000);
+    console.log('read csv file.............');
+    var filename = tenantCode + '_Sale_Orders_' + Math.round((new Date()).getTime() / 1000) + '.csv';
+    console.log(filename);
+    console.log(fileUrl)
+    var dest = __dirname.replace('/app/controllers','') + '/public/downloads/orders/' + filename;
+    console.log(dest);
+    var file = await download(fileUrl, dest, filename);
+
+    const results=[];
+    fs.createReadStream(dest)
+        .pipe(csv())
+        .on('data', (data) => {
+            results.push(data)
+        })
+        .on('end', () => {
+            pushDataInDB(results);
+    });
+    
     page.close();
-    res.send('done..........!');
+    // res.send('done..........!');
+    return;
 }
 
 pushDataInDB = async function(data){
@@ -252,6 +311,8 @@ pushDataInDB = async function(data){
             elem.Channel_Shipping = data[key]['Channel_Shipping'];
             elem.Item_Details = data[key]['Item_Details'];
             elem.Tenant_Code = tenantCode;
+            // elem.Import_Date = moment.tz(Date.now(), "Asia/Kolkata");
+            // console.log(elem.Import_Date);
         }
 
         updatedRecord = updatedRecord+1;

@@ -32,7 +32,7 @@ exports.index = async function(req, res, next){
                         jeradoCount = jerado;
                         markmediumsCount = markmediums;
                         anscommerceCount = anscommerce;
-                        res.render('test.ejs',{
+                        res.render('maven.ejs',{
                             title:'Import/Export',
                             secretwishCount:secretwishCount,
                             gpsCount : gpsCount,
@@ -45,6 +45,5 @@ exports.index = async function(req, res, next){
                 });     
             });
         });
-    });
-    
+    });   
 }
