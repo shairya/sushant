@@ -119,6 +119,19 @@ var server = app.listen(port, function () {
     
     console.log("Example app listening at http://%s:%s", host, port)
  });
+ process.on('SIGTERM', () => {
+    console.info('SIGTERM signal received.');
+    console.log('Closing http server.');
+    server.close(() => {
+      console.log('Http server closed.');
+      // boolean means [force], see in mongoose doc
+      mongoose.connection.close(false, () => {
+        console.log('MongoDb connection closed.');
+        process.exit(0);
+      });
+    });
+  });
+  
 //console.log('The magic happens on port ' + port);
 
 //catch 404 and forward to error handler
