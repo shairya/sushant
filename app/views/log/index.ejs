@@ -1,0 +1,26 @@
+<html>
+    <head><title>Unicommerce - <%=title%></title></head>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <body>
+        Total records with error: <%=logData.length %>
+        <form action="/log">
+            Show: <select name="recordType" onchange="this.form.submit()">
+                <option value="" <% if (recordType==''){ %>selected <% } %>>All</option>
+                <option value="no" <% if (recordType=='no'){ %>selected <% } %>>No</option>
+                <option value="yes" <% if (recordType=='yes'){ %>selected <% } %>>Yes</option>
+            </select>
+        </form>
+        <table border="1" class="tableClass">
+            <tr>
+                <th>Order Id</th><th>Error</th><th>Is Edited?</th><th>Action</th>
+            </tr>
+            <% for(i=0; i < logData.length; i++){ %>
+                <% if(!logData[i].edited || logData[i].edited=='no'){%>
+                    <tr><td><%= logData[i].objectId %></td><td><%= logData[i].responseData %></td><td class="notEdited">No</td><td><a href='/log/edit/<%= logData[i].objectId%>/<%= logData[i]._id%>'>Edit</a></td></tr>
+                <% } else { %>
+                    <tr><td><%= logData[i].objectId %></td><td><%= logData[i].responseData %></td><td>Yes</td><td><a href='/log/edit/<%= logData[i].objectId%>/<%= logData[i]._id%>'>Edit</a></td></tr>
+                <% } %>
+            <% }%>
+        </table>
+    </body>
+</html>

@@ -1,0 +1,114 @@
+<html>
+    <head>
+        <title>Unicommerce - <%=title%></title>
+        <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    </head>
+    <body>
+        <h3>Unicommerce - Maven Error Log</h3>
+        Edit record<a href="/log" class="pullRight underline">Back</a>
+        <form action="/log/update" method="POST">
+            <input type="hidden" name="_id" value="<%= logData[0]._id %>" >
+            <table width="100%" class="tableClass">
+                <tr><td class="first_td">Tenant Code</td><td><input type="text" class="inputBox" name="Tenant_Code" value="<%= logData[0].Tenant_Code %>"></td></tr>
+                <tr><td class="first_td">Display_Order_Code</td><td><input type="text" class="inputBox" name="Display_Order_Code" value="<%= logData[0].Display_Order_Code %>"></td></tr>
+                <tr><td class="first_td">Sale_Order_Item_Code</td><td><input type="text" class="inputBox" name="Sale_Order_Item_Code" value="<%= logData[0].Sale_Order_Item_Code %>"></td></tr>
+                <tr><td class="first_td">Reverse_Pickup_Code</td><td><input type="text" class="inputBox" name="Reverse_Pickup_Code" value="<%= logData[0].Reverse_Pickup_Code %>"></td></tr>
+                <tr><td class="first_td">Reverse_Pickup_Created_Date</td><td><input type="text" class="inputBox" name="Reverse_Pickup_Created_Date" value="<%= logData[0].Reverse_Pickup_Created_Date %>"></td></tr>
+                <tr><td class="first_td">Reverse_Pickup_Reason</td><td><input type="text" class="inputBox" name="Reverse_Pickup_Reason" value="<%= logData[0].Reverse_Pickup_Reason %>"></td></tr>
+                <tr><td class="first_td">Notification_Email</td><td><input type="text" class="inputBox" name="Notification_Email" value="<%= logData[0].Notification_Email %>"></td></tr>
+                <tr><td class="first_td">Notification_Mobile</td><td><input type="text" class="inputBox" name="Notification_Mobile" value="<%= logData[0].Notification_Mobile %>"></td></tr>
+                <tr><td class="first_td">Require_Customization</td><td><input type="text" class="inputBox" name="Require_Customization" value="<%= logData[0].Require_Customization %>"></td></tr>
+                <tr><td class="first_td">COD</td><td><input type="text" class="inputBox" name="COD" value="<%= logData[0].COD %>"></td></tr>
+                <tr><td class="first_td">Shipping_Address_Id</td><td><input type="text" class="inputBox" name="Shipping_Address_Id" value="<%= logData[0].Shipping_Address_Id %>"></td></tr>
+                <tr><td class="first_td">Category</td><td><input type="text" class="inputBox" name="Category" value="<%= logData[0].Category %>"></td></tr>
+                <tr><td class="first_td">Invoice_Code</td><td><input type="text" class="inputBox" name="Invoice_Code" value="<%= logData[0].Invoice_Code %>"></td></tr>
+                <tr><td class="first_td">Invoice_Created</td><td><input type="text" class="inputBox" name="Invoice_Created" value="<%= logData[0].Invoice_Created %>"></td></tr>
+                <tr><td class="first_td">Shipping_Address_Name</td><td><input type="text" class="inputBox" name="Shipping_Address_Name" value="<%= logData[0].Shipping_Address_Name %>"></td></tr>
+                <tr><td class="first_td">Shipping_Address_Line_1</td><td><textarea name="Shipping_Address_Line_1"><%= logData[0].Shipping_Address_Line_1 %></textarea></td></tr>
+                <tr><td class="first_td">Shipping_Address_Line_2</td><td><textarea name="Shipping_Address_Line_2"><%= logData[0].Shipping_Address_Line_2 %></textarea></td></tr>
+                <tr><td class="first_td">Shipping_Address_City</td><td><input type="text" class="inputBox" name="Shipping_Address_City" value="<%= logData[0].Shipping_Address_City %>"></td></tr>
+                <tr><td class="first_td">Shipping_Address_State</td><td><input type="text" class="inputBox" name="Shipping_Address_State" value="<%= logData[0].Shipping_Address_State %>"></td></tr>
+                <tr><td class="first_td">Shipping_Address_Country</td><td><input type="text" class="inputBox" name="Shipping_Address_Country" value="<%= logData[0].Shipping_Address_Country %>"></td></tr>
+                <tr><td class="first_td">Shipping_Address_Pincode</td><td><input type="text" class="inputBox" name="Shipping_Address_Pincode" value="<%= logData[0].Shipping_Address_Pincode %>"></td></tr>
+                <tr><td class="first_td">Shipping_Address_Phone</td><td><input type="text" class="inputBox" name="Shipping_Address_Phone" value="<%= logData[0].Shipping_Address_Phone %>"></td></tr>
+                <tr><td class="first_td">Billing_Address_Id</td><td><input type="text" class="inputBox" name="Billing_Address_Id" value="<%= logData[0].Billing_Address_Id %>"></td></tr>
+                <tr><td class="first_td">Billing_Address_Name</td><td><input type="text" class="inputBox" name="Billing_Address_Name" value="<%= logData[0].Billing_Address_Name %>"></td></tr>
+                <tr><td class="first_td">Billing_Address_Line_1</td><td><textarea name="Billing_Address_Line_1"><%= logData[0].Billing_Address_Line_1 %></textarea></td></tr>
+                <tr><td class="first_td">Billing_Address_Line_2</td><td><textarea name="Billing_Address_Line_2"><%= logData[0].Billing_Address_Line_2 %></textarea></td></tr>
+                <tr><td class="first_td">Billing_Address_City</td><td><input type="text" class="inputBox" name="Billing_Address_City" value="<%= logData[0].Billing_Address_City %>"></td></tr>
+                <tr><td class="first_td">Billing_Address_State</td><td><input type="text" class="inputBox" name="Billing_Address_State" value="<%= logData[0].Billing_Address_State %>"></td></tr>
+                <tr><td class="first_td">Billing_Address_Country</td><td><input type="text" class="inputBox" name="Billing_Address_Country" value="<%= logData[0].Billing_Address_Country %>"></td></tr>
+                <tr><td class="first_td">Billing_Address_Pincode</td><td><input type="text" class="inputBox" name="Billing_Address_Pincode" value="<%= logData[0].Billing_Address_Pincode %>"></td></tr>
+                <tr><td class="first_td">Billing_Address_Phone</td><td><input type="text" class="inputBox" name="Billing_Address_Phone" value="<%= logData[0].Billing_Address_Phone %>"></td></tr>
+                <tr><td class="first_td">Shipping_Method</td><td><input type="text" class="inputBox" name="Shipping_Method" value="<%= logData[0].Shipping_Method %>"></td></tr>
+                <tr><td class="first_td">Item_SKU_Code</td><td><input type="text" class="inputBox" name="Item_SKU_Code" value="<%= logData[0].Item_SKU_Code %>"></td></tr>
+                <tr><td class="first_td">Channel_Product_Id</td><td><input type="text" class="inputBox" name="Channel_Product_Id" value="<%= logData[0].Channel_Product_Id %>"></td></tr>
+                <tr><td class="first_td">Item_Type_Name</td><td><input type="text" class="inputBox" name="Item_Type_Name" value="<%= logData[0].Item_Type_Name %>"></td></tr>
+                <tr><td class="first_td">Item_Type_Color</td><td><input type="text" class="inputBox" name="Item_Type_Color" value="<%= logData[0].Item_Type_Color %>"></td></tr>
+                <tr><td class="first_td">Item_Type_Size</td><td><input type="text" class="inputBox" name="Item_Type_Size" value="<%= logData[0].Item_Type_Size %>"></td></tr>
+                <tr><td class="first_td">Item_Type_Brand</td><td><input type="text" class="inputBox" name="Item_Type_Brand" value="<%= logData[0].Item_Type_Brand %>"></td></tr>
+                <tr><td class="first_td">Channel_Name</td><td><input type="text" class="inputBox" name="Channel_Name" value="<%= logData[0].Channel_Name %>"></td></tr>
+                <tr><td class="first_td">SKU_Require_Customization</td><td><input type="text" class="inputBox" name="SKU_Require_Customization" value="<%= logData[0].SKU_Require_Customization %>"></td></tr>
+                <tr><td class="first_td">Gift_Wrap</td><td><input type="text" class="inputBox" name="Gift_Wrap" value="<%= logData[0].Gift_Wrap %>"></td></tr>
+                <tr><td class="first_td">Gift_Message</td><td><input type="text" class="inputBox" name="Gift_Message" value="<%= logData[0].Gift_Message %>"></td></tr>
+                <tr><td class="first_td">HSN_Code</td><td><input type="text" class="inputBox" name="HSN_Code" value="<%= logData[0].HSN_Code %>"></td></tr>
+                <tr><td class="first_td">MRP</td><td><input type="text" class="inputBox" name="MRP" value="<%= logData[0].MRP %>"></td></tr>
+                <tr><td class="first_td">Total_Price</td><td><input type="text" class="inputBox" name="Total_Price" value="<%= logData[0].Total_Price %>"></td></tr>
+                <tr><td class="first_td">Selling_Price</td><td><input type="text" class="inputBox" name="Selling_Price" value="<%= logData[0].Selling_Price %>"></td></tr>
+                <tr><td class="first_td">Cost_Price</td><td><input type="text" class="inputBox" name="Cost_Price" value="<%= logData[0].Cost_Price %>"></td></tr>
+                <tr><td class="first_td">Prepaid_Amount</td><td><input type="text" class="inputBox" name="Prepaid_Amount" value="<%= logData[0].Prepaid_Amount %>"></td></tr>
+                <tr><td class="first_td">Subtotal</td><td><input type="text" class="inputBox" name="Subtotal" value="<%= logData[0].Subtotal %>"></td></tr>
+                <tr><td class="first_td">Discount</td><td><input type="text" class="inputBox" name="Dscount" value="<%= logData[0].Discount %>"></td></tr>
+                <tr><td class="first_td">GST_Tax_Type_Code</td><td><input type="text" class="inputBox" name="GST_Tax_Type_Code" value="<%= logData[0].GST_Tax_Type_Code %>"></td></tr>
+                <tr><td class="first_td">CGST</td><td><input type="text" class="inputBox" name="CGST" value="<%= logData[0].CGST %>"></td></tr>
+                <tr><td class="first_td">IGST</td><td><input type="text" class="inputBox" name="IGST" value="<%= logData[0].IGST %>"></td></tr>
+                <tr><td class="first_td">SGST</td><td><input type="text" class="inputBox" name="SGST" value="<%= logData[0].SGST %>"></td></tr>
+                <tr><td class="first_td">UTGST</td><td><input type="text" class="inputBox" name="UTGST" value="<%= logData[0].UTGST %>"></td></tr>
+                <tr><td class="first_td">CESS</td><td><input type="text" class="inputBox" name="CESS" value="<%= logData[0].CESS %>"></td></tr>
+                <tr><td class="first_td">CGST_Rate</td><td><input type="text" class="inputBox" name="CGST_Rate" value="<%= logData[0].CGST_Rate %>"></td></tr>
+                <tr><td class="first_td">IGST_Rate</td><td><input type="text" class="inputBox" name="IGST_Rate" value="<%= logData[0].IGST_Rate %>"></td></tr>
+                <tr><td class="first_td">SGST_Rate</td><td><input type="text" class="inputBox" name="SGST_Rate" value="<%= logData[0].SGST_Rate %>"></td></tr>
+                <tr><td class="first_td">UTGST_Rate</td><td><input type="text" class="inputBox" name="UTGST_Rate" value="<%= logData[0].UTGST_Rate %>"></td></tr>
+                <tr><td class="first_td">CESS_Rate</td><td><input type="text" class="inputBox" name="CESS_Rate" value="<%= logData[0].CESS_Rate %>"></td></tr>
+                <tr><td class="first_td">Tax</td><td><input type="text" class="inputBox" name="Tax" value="<%= logData[0].Tax %>"></td></tr>
+                <tr><td class="first_td">Tax_Value</td><td><input type="text" class="inputBox" name="Tax_Value" value="<%= logData[0].Tax_Value %>"></td></tr>
+                <tr><td class="first_td">Voucher_Code</td><td><input type="text" class="inputBox" name="Voucher_Code" value="<%= logData[0].Voucher_Code %>"></td></tr>
+                <tr><td class="first_td">Shipping_Charges</td><td><input type="text" class="inputBox" name="Shipping_Charges" value="<%= logData[0].Shipping_Charges %>"></td></tr>
+                <tr><td class="first_td">Shipping_Method_Charges</td><td><input type="text" class="inputBox" name="Shipping_Method_Charges" value="<%= logData[0].Shipping_Method_Charges %>"></td></tr>
+                <tr><td class="first_td">COD_Service_Charges</td><td><input type="text" class="inputBox" name="COD_Service_Charges" value="<%= logData[0].COD_Service_Charges %>"></td></tr>
+                <tr><td class="first_td">Gift_Wrap_Charges</td><td><input type="text" class="inputBox" name="Gift_Wrap_Charges" value="<%= logData[0].Gift_Wrap_Charges %>"></td></tr>
+                <tr><td class="first_td">Packet_Number</td><td><input type="text" class="inputBox" name="Packet_Number" value="<%= logData[0].Packet_Number %>"></td></tr>
+                <tr><td class="first_td">Order_Date</td><td><input type="text" class="inputBox" name="Order_Date" value="<%= logData[0].Order_Date %>"></td></tr>
+                <tr><td class="first_td">Sale_Order_Code</td><td><input type="text" class="inputBox" name="Sale_Order_Code" value="<%= logData[0].Sale_Order_Code %>"></td></tr>
+                <tr><td class="first_td">On_Hold</td><td><input type="text" class="inputBox" name="On_Hold" value="<%= logData[0].On_Hold %>"></td></tr>
+                <tr><td class="first_td">Sale_Order_Status</td><td><input type="text" class="inputBox" name="Sale_Order_Status" value="<%= logData[0].Sale_Order_Status %>"></td></tr>
+                <tr><td class="first_td">Priority</td><td><input type="text" class="inputBox" name="Priority" value="<%= logData[0].Priority %>"></td></tr>
+                <tr><td class="first_td">Currency</td><td><input type="text" class="inputBox" name="Currency" value="<%= logData[0].Currency %>"></td></tr>
+                <tr><td class="first_td">Currency_Conversion_Rate</td><td><input type="text" class="inputBox" name="Currency_Conversion_Rate" value="<%= logData[0].Currency_Conversion_Rate %>"></td></tr>
+                <tr><td class="first_td">Sale_Order_Item_Status</td><td><input type="text" class="inputBox" name="Sale_Order_Item_Status" value="<%= logData[0].Sale_Order_Item_Status %>"></td></tr>
+                <tr><td class="first_td">Shipping_provider</td><td><input type="text" class="inputBox" name="Shipping_provider" value="<%= logData[0].Shipping_provider %>"></td></tr>
+                <tr><td class="first_td">Shipping_Arranged_By</td><td><input type="text" class="inputBox" name="Shipping_Arranged_By" value="<%= logData[0].Shipping_Arranged_By %>"></td></tr>
+                <tr><td class="first_td">Shipping_Package_Creation_Date</td><td><input type="text" class="inputBox" name="Shipping_Package_Creation_Date" value="<%= logData[0].Shipping_Package_Creation_Date %>"></td></tr>
+                <tr><td class="first_td">Length</td><td><input type="text" class="inputBox" name="Length" value="<%= logData[0].Length %>"></td></tr>
+                <tr><td class="first_td">Width</td><td><input type="text" class="inputBox" name="Width" value="<%= logData[0].Width %>"></td></tr>
+                <tr><td class="first_td">Height</td><td><input type="text" class="inputBox" name="Height" value="<%= logData[0].Height %>"></td></tr>
+                <tr><td class="first_td">Delivery_Time</td><td><input type="text" class="inputBox" name="Delivery_Time" value="<%= logData[0].Delivery_Time %>"></td></tr>
+                <tr><td class="first_td">Tracking_Number</td><td><input type="text" class="inputBox" name="Tracking_Number" value="<%= logData[0].Tracking_Number %>"></td></tr>
+                <tr><td class="first_td">Dispatch_Date</td><td><input type="text" class="inputBox" name="Dispatch_Date" value="<%= logData[0].Dispatch_Date %>"></td></tr>
+                <tr><td class="first_td">Facility</td><td><input type="text" class="inputBox" name="Facility" value="<%= logData[0].Facility %>"></td></tr>
+                <tr><td class="first_td">Return_Date</td><td><input type="text" class="inputBox" name="Return_Date" value="<%= logData[0].Return_Date %>"></td></tr>
+                <tr><td class="first_td">Return_Reason</td><td><input type="text" class="inputBox" name="Return_Reason" value="<%= logData[0].Return_Reason %>"></td></tr>
+                <tr><td class="first_td">Created</td><td><input type="text" class="inputBox" name="Created" value="<%= logData[0].Created %>"></td></tr>
+                <tr><td class="first_td">Updated</td><td><input type="text" class="inputBox" name="Updated" value="<%= logData[0].Updated %>"></td></tr>
+                <tr><td class="first_td">Combination_Identifier</td><td><input type="text" class="inputBox" name="Combination_Identifier" value="<%= logData[0].Combination_Identifier %>"></td></tr>
+                <tr><td class="first_td">Item_Code</td><td><input type="text" class="inputBox" name="Item_Code" value="<%= logData[0].Item_Code %>"></td></tr>
+                <tr><td class="first_td">IMEI</td><td><input type="text" class="inputBox" name="IMEI" value="<%= logData[0].IMEI %>"></td></tr>
+                <tr><td class="first_td">Weight</td><td><input type="text" class="inputBox" name="Weight" value="<%= logData[0].Weight %>"></td></tr>
+                <tr><td class="first_td">GSTIN</td><td><input type="text" class="inputBox" name="GSTIN" value="<%= logData[0].GSTIN %>"></td></tr>
+                <tr><td class="first_td">TIN</td><td><input type="text" class="inputBox" name="TIN" value="<%= logData[0].TIN %>"></td></tr>
+            </table>
+            <input type="submit" value="Save" />
+            <input type="hidden" name="logId" value="<%= logId %>" >
+        </form>
+    </body>
+</html>

@@ -12,6 +12,7 @@ var logSchema = new Schema({
     requestData : {type: String, default:null},
     responseData : {type: String, default:null},
     status      : {type: String},
+    edited      : {type: String, default:'no'},
     createdAt   : {type: Date, default:dateTimezone}
 });
 
