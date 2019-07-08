@@ -125,7 +125,7 @@ getDataFromDB = async function(){
     if(serverCookie){
         console.log(tenantCode)
         await OrderModel.find({Pushed_To_Server:null, Tenant_Code: tenantCode}).sort({
-            Display_Order_Code: 1,Item_SKU_Code:1,Tenant_Code:1}).limit(10).exec(function(err, docs){
+            Display_Order_Code: 1,Item_SKU_Code:1,Tenant_Code:1}).exec(function(err, docs){
                 console.log('records fetched: .........' + docs.length);
                 if(docs.length>0){
                     prepareData(docs);
