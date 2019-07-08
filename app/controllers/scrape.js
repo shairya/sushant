@@ -145,7 +145,7 @@ scrape = async function(req, res, next)
     await frame.click(DATE_RANGE_SELECTOR);
     
     await frame.click('#filter-5');
-    await frame.select('#filter-status', 'CREATED','FULFILLABLE','UNFULFILLABLE','DISPATCHED');
+    await frame.select('#filter-status', 'CREATED','FULFILLABLE','DISPATCHED');
     await frame.click('#createJob');
     await page.waitFor(10000);
 
