@@ -12,6 +12,7 @@ module.exports = function (app, passport) {
     // app.get('/', scrape.index, scrape.index);//home
     app.get('/pushorders', order.index, order.index);
     app.get('/log', log.index, log.index);
+    app.get('/log/deletesqllog', log.deletesqllog, log.deletesqllog);
     app.get('/log/edit/:orderId/:logId', log.edit, log.edit);
     app.get('/scrape/secretwish', scrape.secretwish, scrape.secretwish);
     app.get('/scrape/gps', scrape.gps, scrape.gps);

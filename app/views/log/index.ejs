@@ -1,8 +1,12 @@
 <html>
-    <head><title>Unicommerce - <%=title%></title></head>
-    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <head>
+        <title>Unicommerce - <%=title%></title>
+        <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    </head>
+    
     <body>
-            <h3>Unicommerce - Maven</h3>
+        <h3>Unicommerce - Maven</h3>
+        <% if(msg) {%><%=msg%><%}%>
         Total records with error: <%=logData.length %>
         <form action="/log">
             Show: <select name="recordType" onchange="this.form.submit()">
@@ -10,18 +14,23 @@
                 <option value="no" <% if (recordType=='no'){ %>selected <% } %>>No</option>
                 <option value="yes" <% if (recordType=='yes'){ %>selected <% } %>>Yes</option>
             </select>
+            <a href="/log/deletesqllog" class="pullRight">Delete Sql Error Log</a>
         </form>
-        <table border="1" class="tableClass">
+        <table class="tableClass" width="100%" border="1">
             <tr>
                 <th>Order Id</th><th>Error</th><th>Is Edited?</th><th>Action</th>
             </tr>
-            <% for(i=0; i < logData.length; i++){ %>
-                <% if(!logData[i].edited || logData[i].edited=='no'){%>
-                    <tr><td><%= logData[i].objectId %></td><td><%= logData[i].responseData %></td><td class="notEdited">No</td><td><a href='/log/edit/<%= logData[i].objectId%>/<%= logData[i]._id%>'>Edit</a></td></tr>
-                <% } else { %>
-                    <tr><td><%= logData[i].objectId %></td><td><%= logData[i].responseData %></td><td>Yes</td><td><a href='/log/edit/<%= logData[i].objectId%>/<%= logData[i]._id%>'>Edit</a></td></tr>
+            <% if(logData.length>0) { %>
+                <% for(i=0; i < logData.length; i++){ %>
+                    <% if(!logData[i].edited || logData[i].edited=='no'){%>
+                        <tr><td><%= logData[i].objectId %></td><td><%= logData[i].responseData %></td><td class="notEdited">No</td><td><a href='/log/edit/<%= logData[i].objectId%>/<%= logData[i]._id%>'>Edit</a></td></tr>
+                    <% } else { %>
+                        <tr><td><%= logData[i].objectId %></td><td><%= logData[i].responseData %></td><td>Yes</td><td><a href='/log/edit/<%= logData[i].objectId%>/<%= logData[i]._id%>'>Edit</a></td></tr>
+                    <% } %>
+                <% }%>
+            <% } else {%>
+                <tr><td colspan="4">No records found</td></tr>
                 <% } %>
-            <% }%>
         </table>
     </body>
 </html>

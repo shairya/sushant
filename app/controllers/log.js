@@ -12,7 +12,7 @@ exports.index = async function(req, res, next){
     var currentMonth = ("0" + (new Date().getMonth() + 1)).slice(-2);
     var currentDate = new Date().getDate();
     var today = currentYear +'-'+ currentMonth + '-' + currentDate+' 00:00:00.000';
-    console.log(today);
+
     var logData = '';
     if(recordType=='yes'){
         var q = {edited:'yes',responseData:{'$regex':'"errorCode":400'}, createdAt:{'$gte': new Date(today)}};
@@ -28,7 +28,8 @@ exports.index = async function(req, res, next){
             res.render('log/index.ejs', {
                 logData: logData,
                 recordType:recordType,
-                title:'List'
+                title:'List',
+                msg:''
             });
             return;
         }
@@ -60,6 +61,19 @@ exports.edit = async function(req, res, next){
                 title:'List',
                 found: false
             });
+            return;
+        }
+    }); 
+}
+
+exports.deletesqllog = async function(req, res, next){
+    LogModel.deleteMany({responseData:{'$regex':'could not execute statement'}}, function(err) {
+        if(err) {
+            console.log(err);
+            res.redirect('/log');
+            return;
+        }else{
+            res.redirect('/log');
             return;
         }
     }); 
