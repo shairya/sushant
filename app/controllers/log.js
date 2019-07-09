@@ -12,6 +12,7 @@ exports.index = async function(req, res, next){
     var currentMonth = ("0" + (new Date().getMonth() + 1)).slice(-2);
     var currentDate = new Date().getDate();
     var today = currentYear +'-'+ currentMonth + '-' + currentDate+' 00:00:00.000';
+    console.log(today);
     var logData = '';
     if(recordType=='yes'){
         var q = {edited:'yes',responseData:{'$regex':'"errorCode":400'}, createdAt:{'$gte': new Date(today)}};

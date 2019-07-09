@@ -163,7 +163,7 @@ prepareData = async function(data){
     var previousOrderId = '';
     var previousItemId = '';
     var p=0;
-
+    allData=[];
     for( var i=0; i<data.length; i++ ){
         if(previousOrderId!=data[i].Display_Order_Code){
             var customerName = await getName(data[i].Shipping_Address_Name);
