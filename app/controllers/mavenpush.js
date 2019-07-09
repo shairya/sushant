@@ -19,7 +19,7 @@ exports.index = async function(req, res, next){
     var anscommerceCount = 0;
     await OrderModel.countDocuments({Pushed_To_Server:null,Tenant_Code:'secretwish',Import_Date:{'$gte':new Date(today)}})
     .then(secretwish => {
-        OrderModel.countDocuments({Pushed_To_Server:null,Tenant_Code:'grandpitspot2',Import_Date:{'$gte':new Date(today)}})
+        OrderModel.countDocuments({Pushed_To_Server:null,Tenant_Code:'grandpitstop2',Import_Date:{'$gte':new Date(today)}})
         .then(gps => {
         OrderModel.countDocuments({Pushed_To_Server:null,Tenant_Code:'jeradobrandsprivatelimited',Import_Date:{'$gte':new Date(today)}})
             .then(jerado => {

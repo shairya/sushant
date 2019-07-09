@@ -19,7 +19,7 @@ exports.secretwish = async function(req, res, next){
         console.log('import is not enable for.....' + tenantCode)
     }
     
-    res.redirect('/test');
+    res.redirect('/orders');
     return;
 }
 
@@ -32,7 +32,7 @@ exports.gps = async function(req, res, next){
         console.log('import is not enable for.....' + tenantCode)
     }
     console.log('are we done.....?');
-    res.redirect('/test');
+    res.redirect('/orders');
     return;
 }
 
@@ -45,7 +45,7 @@ exports.jerado = async function(req, res, next){
         console.log('import is not enable for.....' + tenantCode)
     }
     console.log('are we done.....?');
-    res.redirect('/test');
+    res.redirect('/orders');
     return;
 }
 
@@ -58,7 +58,7 @@ exports.markmediums = async function(req, res, next){
         console.log('import is not enable for.....' + tenantCode)
     }
     console.log('are we done.....?');
-    res.redirect('/test');
+    res.redirect('/orders');
     return;
 }
 
@@ -71,7 +71,7 @@ exports.anscommerce = async function(req, res, next){
         console.log('import is not enable for.....' + tenantCode)
     }
     console.log('are we done.....?');
-    res.redirect('/test');
+    res.redirect('/orders');
     return;
 }
 
