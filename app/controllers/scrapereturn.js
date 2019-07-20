@@ -204,8 +204,8 @@ scrape = async function(req, res, next)
         .on('end', () => {
             pushDataInDB(results);
     });
-    // page.close();
-    // return;
+    page.close();
+    return;
 }
 
 pushDataInDB = async function(data){
