@@ -319,7 +319,7 @@ sendData = function(postData){
             }else{
                 if(body.errorCode==200){
                     logModel.findOneAndUpdate({
-                        objectId:postData.orderId,status:'pending'
+                        objectId:postData.orderId,status:'pending',module:'Order'
                     },{$set:{status:"success", responseData:JSON.stringify(body)}},function(err, d) {
                         OrderModel.update(
                             {Display_Order_Code:postData.orderId}, 
@@ -335,7 +335,7 @@ sendData = function(postData){
                     });
                 }else if(body.errorCode==450){
                     logModel.findOneAndUpdate({
-                        objectId:postData.orderId,status:'pending'
+                        objectId:postData.orderId,status:'pending',module:'Order'
                     },{$set:{status:"duplicate", responseData:JSON.stringify(body)}},function(err, d) {
                         OrderModel.update(
                             {Display_Order_Code:postData.orderId}, 
@@ -346,7 +346,7 @@ sendData = function(postData){
                     });
                 }else{
                     logModel.findOneAndUpdate({
-                        objectId:postData.orderId,status:'pending'
+                        objectId:postData.orderId,status:'pending',module:'Order'
                     },{$set:{status:"failed", responseData:JSON.stringify(body)}},function(err, d) {});
                 }
             }
