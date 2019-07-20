@@ -81,7 +81,7 @@ login = async function(tenantCode){
     const BUTTON_SELECTOR = '#loginForm > input.loginButton';
     
     browser = await puppeteer.launch({
-        headless: false
+        headless: true
     });
     page = await browser.newPage();
     await page.goto(constant.url);
@@ -191,7 +191,7 @@ scrape = async function(req, res, next)
     console.log('read csv file.............');
     var filename = tenantCode + '_Return_Orders_' + Math.round((new Date()).getTime() / 1000) + '.csv';
     console.log(fileUrl)
-    var dest = __dirname.replace('\\app\\controllers','') + '/public/downloads/returns/' + filename;
+    var dest = __dirname.replace('/app/controllers','') + '/public/downloads/returns/' + filename;
     console.log(dest);
     var file = await download(fileUrl, dest, filename);
     await page.waitFor(5000);
