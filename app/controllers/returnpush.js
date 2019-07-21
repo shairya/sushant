@@ -12,7 +12,7 @@ exports.anscommerce = async function(req, res, next){
             tenantCode = constant.uniCommerceProjects[id].name;
             mavenLoginDomain = constant.uniCommerceProjects[id].mavenLoginDomain;
             console.log('call auth api for...........' + tenantCode);
-            await sendAuthRequest();
+            await sendReturnAuthRequest();
         }else{
             console.log(tenantCode + 'not enable in config.....')
         }
@@ -26,7 +26,7 @@ exports.gps = async function(req, res, next){
         tenantCode = constant.uniCommerceProjects[id].name;
         mavenLoginDomain = constant.uniCommerceProjects[id].mavenLoginDomain;
         console.log('call auth api for...........' + tenantCode);
-        await sendAuthRequest();
+        await sendReturnAuthRequest();
     }else{
         console.log(tenantCode + 'not enable in config.....')
     }
@@ -40,7 +40,7 @@ exports.jerado = async function(req, res, next){
         tenantCode = constant.uniCommerceProjects[id].name;
         mavenLoginDomain = constant.uniCommerceProjects[id].mavenLoginDomain;
         console.log('call auth api for...........' + tenantCode);
-        await sendAuthRequest();
+        await sendReturnAuthRequest();
     }else{
         console.log(tenantCode + 'not enable in config.....')
     }
@@ -54,7 +54,7 @@ exports.markmediums = async function(req, res, next){
         tenantCode = constant.uniCommerceProjects[id].name;
         mavenLoginDomain = constant.uniCommerceProjects[id].mavenLoginDomain;
         console.log('call auth api for...........' + tenantCode);
-        await sendAuthRequest();
+        await sendReturnAuthRequest();
     }else{
         console.log(tenantCode + 'not enable in config.....')
     }
@@ -68,7 +68,7 @@ exports.secretwish = async function(req, res, next){
         tenantCode = constant.uniCommerceProjects[id].name;
         mavenLoginDomain = constant.uniCommerceProjects[id].mavenLoginDomain;
         console.log('call auth api for...........' + tenantCode);
-        await sendAuthRequest();
+        await sendReturnAuthRequest();
     }else{
         console.log(tenantCode + 'not enable in config.....')
     }
@@ -83,7 +83,7 @@ exports.index = async function(req, res, next)
     return;
 }
 
-sendAuthRequest = function(){
+sendReturnAuthRequest = function(){
     console.log('auth call...........'+mavenLoginDomain)
     var options = { 
         method: 'POST',
@@ -114,21 +114,21 @@ sendAuthRequest = function(){
                 reject();
             }else{
                 serverCookie = response.headers.cookie;
-                getDataFromDB();
+                getReturnDataFromDB();
                 resolve();
             }
         });
     });
 }
 
-getDataFromDB = async function(){
+getReturnDataFromDB = async function(){
     if(serverCookie){
         console.log(tenantCode)
         await ReturnModel.find({Pushed_To_Server:null, Tenant_Code: tenantCode}).sort({
             Display_Order_Number: 1,Tenant_Code:1}).limit(50).exec(function(err, docs){
                 console.log('records fetched: .........' + docs.length);
                 if(docs.length>0){
-                    prepareData(docs);
+                    prepareReturnData(docs);
                 }else{
                     console.log('no records found for ' + tenantCode);
                 }
@@ -143,7 +143,7 @@ getDataFromDB = async function(){
  * [11,22,33,44]
  * 
  */
-prepareData = async function(data){
+prepareReturnData = async function(data){
     allData=[];
     for( var i=0; i<data.length; i++ ){ 
         var order = {};
@@ -176,22 +176,22 @@ prepareData = async function(data){
 
         allData.push(order);
     }
-    await sendFinalData(allData);
+    await sendFinalReturnData(allData);
     console.log('total orders to send............' + (i));
 }
 
-async function sendFinalData(allData){
+async function sendFinalReturnData(allData){
     let a=0;    
     if(allData.length){
         for(const row of allData){
-            await sendData(row,a);
+            await sendReturnData(row,a);
             a++;
         }
         console.log("Finished sending orders");
     }
 }
 
-sendData = function(postData){
+sendReturnData = function(postData){
     console.log('send to server..........' + postData.orderNo);
     console.log('request data....');
     console.log(postData)
