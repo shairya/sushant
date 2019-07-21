@@ -93,7 +93,7 @@ login = async function(tenantCode){
     await page.keyboard.type(constant.j_password);
     const response = await page.click(BUTTON_SELECTOR);
     console.log('login done..............');
-    await scrape();
+    await scrapereturns();
 
 }
 
@@ -110,7 +110,7 @@ function getDateRange() {
     return mm + '/' + dd + '/' + yyyy;
 }
 
-scrape = async function(req, res, next)
+scrapereturns = async function(req, res, next)
 {
     console.log('scraping returns........')
     await page.waitFor(5*1000);     
