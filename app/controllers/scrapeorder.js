@@ -14,7 +14,7 @@ exports.secretwish = async function(req, res, next){
     projectId = 5;
     if(constant.uniCommerceProjects[projectId].enable==true){
         tenantCode = constant.uniCommerceProjects[projectId].name;
-        await login(tenantCode);
+        await sitelogin(tenantCode);
     }else{
         console.log('import is not enable for.....' + tenantCode)
     }
@@ -27,7 +27,7 @@ exports.gps = async function(req, res, next){
     projectId = 2;
     if(constant.uniCommerceProjects[projectId].enable==true){
         tenantCode = constant.uniCommerceProjects[projectId].name;
-        await login(tenantCode);
+        await sitelogin(tenantCode);
     }else{
         console.log('import is not enable for.....' + tenantCode)
     }
@@ -40,7 +40,7 @@ exports.jerado = async function(req, res, next){
     projectId = 3;
     if(constant.uniCommerceProjects[projectId].enable==true){
         tenantCode = constant.uniCommerceProjects[projectId].name;
-        await login(tenantCode);
+        await sitelogin(tenantCode);
     }else{
         console.log('import is not enable for.....' + tenantCode)
     }
@@ -53,7 +53,7 @@ exports.markmediums = async function(req, res, next){
     projectId = 4;
     if(constant.uniCommerceProjects[projectId].enable==true){
         tenantCode = constant.uniCommerceProjects[projectId].name;
-        await login(tenantCode);
+        await sitelogin(tenantCode);
     }else{
         console.log('import is not enable for.....' + tenantCode)
     }
@@ -66,7 +66,7 @@ exports.anscommerce = async function(req, res, next){
     projectId = 1;
     if(constant.uniCommerceProjects[projectId].enable==true){
         tenantCode = constant.uniCommerceProjects[projectId].name;
-        await login(tenantCode);
+        await sitelogin(tenantCode);
     }else{
         console.log('import is not enable for.....' + tenantCode)
     }
@@ -75,8 +75,8 @@ exports.anscommerce = async function(req, res, next){
     return;
 }
 
-login = async function(tenantCode){
-    console.log('lets login for ............' + tenantCode);
+sitelogin = async function(tenantCode){
+    console.log('lets login for (orders)............' + tenantCode);
     const USERNAME_SELECTOR = '#username';
     const PASSWORD_SELECTOR = '#password';
     const BUTTON_SELECTOR = '#loginForm > input.loginButton';
@@ -100,7 +100,7 @@ login = async function(tenantCode){
 
 scrape = async function(req, res, next)
 {
-    console.log('scraping........')
+    console.log('scraping orders........')
     await page.waitFor(5*1000);     
     tenantCode = constant.uniCommerceProjects[projectId].name;
     const DATE_RANGE_SELECTOR = 'body > div:nth-child(16) > div.ranges > ul > li:nth-child(5)';        

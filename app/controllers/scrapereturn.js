@@ -75,7 +75,7 @@ exports.anscommerce = async function(req, res, next){
 }
 
 login = async function(tenantCode){
-    console.log('lets login for ............' + tenantCode);
+    console.log('lets login for (returns)............' + tenantCode);
     const USERNAME_SELECTOR = '#username';
     const PASSWORD_SELECTOR = '#password';
     const BUTTON_SELECTOR = '#loginForm > input.loginButton';
@@ -112,7 +112,7 @@ function getDateRange() {
 
 scrape = async function(req, res, next)
 {
-    console.log('scraping........')
+    console.log('scraping returns........')
     await page.waitFor(5*1000);     
     tenantCode = constant.uniCommerceProjects[projectId].name;
     const CUSTOM_DATE_RANGE_SELECTOR = '#filterInput-dateRangeFilter > div.grains > button:nth-child(7)';

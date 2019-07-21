@@ -1,5 +1,5 @@
 var home = require('../app/controllers/home');
-var scrape = require('../app/controllers/scrape');
+var scrapeorder = require('../app/controllers/scrapeorder');
 var order = require('../app/controllers/order');
 var log = require('../app/controllers/log');
 var returnslog = require('../app/controllers/returnslog');
@@ -24,20 +24,21 @@ module.exports = function (app, passport) {
     app.get('/returnslog/deletesqllog', returnslog.deletesqllog, returnslog.deletesqllog);
     app.get('/returnslog/deletealllog', returnslog.deletealllog, returnslog.deletealllog);
     
-    app.get('/scrape/secretwish', scrape.secretwish, scrape.secretwish);
-    app.get('/scrape/gps', scrape.gps, scrape.gps);
-    app.get('/scrape/jerado', scrape.jerado, scrape.jerado);
-    app.get('/scrape/markmediums', scrape.markmediums, scrape.markmediums);
-    app.get('/scrape/anscommerce', scrape.anscommerce, scrape.anscommerce);
-    app.get('/scrape/return/secretwish', scrapereturn.secretwish, scrapereturn.secretwish);
-    app.get('/scrape/return/gps', scrapereturn.gps, scrapereturn.gps);
-    app.get('/scrape/return/jerado', scrapereturn.jerado, scrapereturn.jerado);
-    app.get('/scrape/return/markmediums', scrapereturn.markmediums, scrapereturn.markmediums);
-    app.get('/scrape/return/anscommerce', scrapereturn.anscommerce, scrapereturn.anscommerce);
+    app.get('/scrapereturn/secretwish', scrapereturn.secretwish, scrapereturn.secretwish);
+    app.get('/scrapereturn/gps', scrapereturn.gps, scrapereturn.gps);
+    app.get('/scrapereturn/jerado', scrapereturn.jerado, scrapereturn.jerado);
+    app.get('/scrapereturn/markmediums', scrapereturn.markmediums, scrapereturn.markmediums);
+    app.get('/scrapereturn/anscommerce', scrapereturn.anscommerce, scrapereturn.anscommerce);
+
+    app.get('/scrapeorder/secretwish/', scrapeorder.secretwish, scrapeorder.secretwish);
+    app.get('/scrapeorder/gps/', scrapeorder.gps, scrapeorder.gps);
+    app.get('/scrapeorder/jerado/', scrapeorder.jerado, scrapeorder.jerado);
+    app.get('/scrapeorder/markmediums/', scrapeorder.markmediums, scrapeorder.markmediums);
+    app.get('/scrapeorder/anscommerce/', scrapeorder.anscommerce, scrapeorder.anscommerce);
+
     app.post('/log/update', log.update, log.update);
     app.get('/returns', returns.index, returns.index);
-    
-    
+
     app.get('/orders', maven.index, maven.index);
     app.get('/mavenpush/gps', order.gps, order.gps);
     app.get('/mavenpush/anscommerce', order.anscommerce, order.anscommerce);
