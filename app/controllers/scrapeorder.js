@@ -94,11 +94,11 @@ sitelogin = async function(tenantCode){
     await page.keyboard.type(constant.j_password);
     const response = await page.click(BUTTON_SELECTOR);
     console.log('login done..............'+response);
-    await scrape();
+    await scrapeorders();
 
 }
 
-scrape = async function(req, res, next)
+scrapeorders = async function(req, res, next)
 {
     console.log('scraping orders........')
     await page.waitFor(5*1000);     
@@ -176,7 +176,7 @@ scrape = async function(req, res, next)
     console.log(fileUrl)
     var dest = __dirname.replace('/app/controllers','') + '/public/downloads/orders/' + filename;
     console.log(dest);
-    var file = await download(fileUrl, dest, filename);
+    var file = await downloadFile(fileUrl, dest, filename);
 
     const results=[];
     fs.createReadStream(dest)
@@ -185,7 +185,7 @@ scrape = async function(req, res, next)
             results.push(data)
         })
         .on('end', () => {
-            pushDataInDB(results);
+            pushOrdersDataInDB(results);
     });
     
     page.close();
@@ -193,7 +193,7 @@ scrape = async function(req, res, next)
     return;
 }
 
-pushDataInDB = async function(data){
+pushOrdersDataInDB = async function(data){
     var updatedRecord = 0;
     
     OrderModel.deleteMany({Tenant_Code:tenantCode}, function(err) {
@@ -336,7 +336,7 @@ getTodayDate = function() {
     return [year, month, day].join('-');
 }
 
-download = async function(url, dest, filename){
+downloadFile = async function(url, dest, filename){
     console.log('download function called..........');
     return new Promise((resolve, reject) => {
         const file = fs.createWriteStream(dest, { flags: "wx" });
