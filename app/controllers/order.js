@@ -205,6 +205,7 @@ prepareData = async function(data){
             order.remarks               = null;
             order.warehouseName         = "";
             order.holdDispatch          = 0;
+            order.tag                   = data[i].Channel_Name;
 
             // customer details
             order.custDetails.customerShippingNature        = "";
