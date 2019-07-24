@@ -205,7 +205,7 @@ prepareData = async function(data){
             order.remarks               = null;
             order.warehouseName         = "";
             order.holdDispatch          = 0;
-            order.tag                   = data[i].Channel_Name;
+            // order.tag                   = data[i].Channel_Name;
 
             // customer details
             order.custDetails.customerShippingNature        = "";
@@ -291,7 +291,8 @@ sendData = function(postData){
         module:'Order',
         objectId:postData.orderId,
         requestData:JSON.stringify(postData),
-        status:'pending'
+        status:'pending',
+        tenantCode: tenantCode
     }
     var log = new logModel(logData);
     log.save(function(err){

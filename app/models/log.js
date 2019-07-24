@@ -7,11 +7,11 @@ var Schema = mongoose.Schema;
 var logSchema = new Schema({ 
     module      : {type: String},
     tenantCode  : {type: String},
-    objectId    : {type: String},
+    objectId    : {type: String, default:null},
     subObjectId : {type: String, default:null},
     requestData : {type: String, default:null},
     responseData : {type: String, default:null},
-    status      : {type: String},
+    status      : {type: String, default:''},
     edited      : {type: String, default:'no'},
     createdAt   : {type: Date, default:new Date(+new Date() + 1000 * 60 * 330)}
 });

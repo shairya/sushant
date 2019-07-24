@@ -8,6 +8,8 @@ var maven = require('../app/controllers/mavenpush');
 var returns = require ('../app/controllers/return');
 var returnpush = require ('../app/controllers/returnpush');
 var scrapereturn = require ('../app/controllers/scrapereturn');
+var inventory = require ('../app/controllers/inventory');
+var inventorysync = require ('../app/controllers/inventorysync');
 
 //you can include all your controllers
 
@@ -37,9 +39,18 @@ module.exports = function (app, passport) {
     app.get('/scrapeorder/anscommerce/', scrapeorder.anscommerce, scrapeorder.anscommerce);
 
     app.post('/log/update', log.update, log.update);
+
     app.get('/returns', returns.index, returns.index);
+    app.get('/inventory', inventory.index, inventory.index);
+    
+    app.get('/inventory/secretwish', inventorysync.secretwish, inventorysync.secretwish);
+    app.get('/inventory/gps', inventorysync.gps, inventorysync.gps);
+    app.get('/inventory/markmediums', inventorysync.markmediums, inventorysync.markmediums);
+    app.get('/inventory/jerado', inventorysync.jerado, inventorysync.jerado);
+    app.get('/inventory/anscommerce', inventorysync.anscommerce, inventorysync.anscommerce);
 
     app.get('/orders', maven.index, maven.index);
+
     app.get('/mavenpush/gps', order.gps, order.gps);
     app.get('/mavenpush/anscommerce', order.anscommerce, order.anscommerce);
     app.get('/mavenpush/jerado', order.jerado, order.jerado);
