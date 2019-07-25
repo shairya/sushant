@@ -101,7 +101,7 @@ sendInventoryAuthRequest = async function(){
 async function getInventory(){
     console.log(tenantCode);
     console.log('get inventory data...........' + mavenLoginDomain)
-    var url = 'https://'+mavenLoginDomain+'.gscmaven.com/api/oms/omsservices/webapi/inventory?start=0&size=2500&warehouseid=1';
+    var url = 'https://'+mavenLoginDomain+'.gscmaven.com/api/oms/omsservices/webapi/inventory?start=0&size=5&warehouseid=1';
     var options = { 
         headers: 
             { 
@@ -149,7 +149,7 @@ updateInventory = async function(row){
                 shelfCode:"DEFAULT",
                 inventoryType:"GOOD_INVENTORY",
                 adjustmentType:"REPLACE",
-                remarks:""
+                remarks:"mavensync"
             }
         };
         var logData = {
