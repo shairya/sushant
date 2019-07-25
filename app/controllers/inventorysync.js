@@ -217,6 +217,10 @@ loginInventory = async function(){
             var PROJECT_SELECTOR = '#accountsListContainer > div:nth-child('+projectId+') > div';
             await page.click(PROJECT_SELECTOR);
             await page.waitFor(3000);
+            // delete previous logs
+            logModel.deleteMany({module:'InventorySync',tenantCode:tenantCode}, function(err) {
+                if(err) throw err;
+            });
             for(let row of inventoryData){
                 page = await browser.newPage();
                 await updateInventory(row);

@@ -2,6 +2,17 @@
 var LogModel = require('../models/log');
 var constant = require('../../config/constants');
 
+exports.log = async function(req, res, next){
+    LogModel.find({module:'InventorySync', status:{'$ne':'success'}})
+    .then(data => {
+        
+        res.render('inventory/log.ejs',{
+            title:'Inventory Error Log',
+            data:data
+        });
+        return;
+    });
+}
 exports.index = async function(req, res, next){
     
     var secretwishCount = 0;

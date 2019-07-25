@@ -1,0 +1,24 @@
+<html>
+    <head>
+        <title>Unicommerce - <%=title%></title>
+        <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    </head>
+    
+    <body>
+        <h3>Unicommerce - Maven: <%=title%></h3>
+        Total records with error: <%=data.length %><a href='/inventory' class="pullRight">Back</a>
+        
+        <table class="tableClass" width="100%" border="1">
+            <tr>
+                <th>SKU Code</th><th>Error</th><th>Tenant Code</th>
+            </tr>
+            <% if(data.length>0) { %>
+                <% for(i=0; i < data.length; i++){ %>
+                    <tr><td><%= data[i].objectId %></td><td><%= data[i].responseData %></td><td><%=data[i].tenantCode%></td></tr>
+                <% }%>
+            <% } else {%>
+                <tr><td colspan="4">No records found</td></tr>
+                <% } %>
+        </table>
+    </body>
+</html>

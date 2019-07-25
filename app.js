@@ -65,51 +65,38 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 // routes ======================================================================
 require('./config/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
-cron.schedule("0 0 */2 * * *",()=> {
-    // console.log("download data from unicommerce");
-    // request( constant.host+'/scrape', function (error, response, body) {
-    //    if (error){ console.log('error.....'+error) }
-    //    else{ console.log(body) }
-    // });
+cron.schedule("0 0 */3 * * *",()=> {
+    request( constant.host+'/inventory/secretwish', function (error, response, body) {
+       if (error){ console.log('error.....'+error) }
+       else{ console.log(body) }
+    });
 });
 
-cron.schedule("0 */3 * * * *",()=> {
-    // console.log("push gps data to maven");
-    // request( constant.host+'/push/gps', function (error, response, body) {
-    //    if (error){ console.log('error.....'+error) }
-    //    else{ console.log(body) }
-    // });
+cron.schedule("0 10 */3 * * *",()=> {
+    request( constant.host+'/inventory/gps', function (error, response, body) {
+       if (error){ console.log('error.....'+error) }
+       else{ console.log(body) }
+    });
 });
-cron.schedule("0 */7 * * * *",()=> {
-    // console.log("push anscommerce data to maven");
-    // request( constant.host+'/push/ancommerce', function (error, response, body) {
-    //    if (error){ console.log('error.....'+error) }
-    //    else{ console.log(body) }
-    // });
+cron.schedule("0 15 */3 * * *",()=> {
+    request( constant.host+'/inventory/jerado', function (error, response, body) {
+       if (error){ console.log('error.....'+error) }
+       else{ console.log(body) }
+    });
 });
 
-cron.schedule("0 */11 * * * *",()=> {
-    // console.log("push markmediums data to maven");
-    // request( constant.host+'/push/markmediums', function (error, response, body) {
-    //    if (error){ console.log('error.....'+error) }
-    //    else{ console.log(body) }
-    // });
+cron.schedule("0 20 */3 * * *",()=> {
+    request( constant.host+'/inventory/markmediums', function (error, response, body) {
+       if (error){ console.log('error.....'+error) }
+       else{ console.log(body) }
+    });
 });
 
-cron.schedule("0 */13 * * * *",()=> {
-    // console.log("push jerado data to maven");
-    // request( constant.host+'/push/jerado', function (error, response, body) {
-    //    if (error){ console.log('error.....'+error) }
-    //    else{ console.log(body) }
-    // });
-});
-
-cron.schedule("0 */17 * * * *",()=> {
-    // console.log("push secretwish data to maven");
-    // request( constant.host+'/push/secretwish', function (error, response, body) {
-    //    if (error){ console.log('error.....'+error) }
-    //    else{ console.log(body) }
-    // });
+cron.schedule("0 30 */3 * * *",()=> {
+    request( constant.host+'/inventory/anscommerce', function (error, response, body) {
+       if (error){ console.log('error.....'+error) }
+       else{ console.log(body) }
+    });
 });
 
 //launch ======================================================================

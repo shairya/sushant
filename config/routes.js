@@ -41,7 +41,9 @@ module.exports = function (app, passport) {
     app.post('/log/update', log.update, log.update);
 
     app.get('/returns', returns.index, returns.index);
+    app.get('/inventory/log', inventory.log, inventory.log);
     app.get('/inventory', inventory.index, inventory.index);
+    
     
     app.get('/inventory/secretwish', inventorysync.secretwish, inventorysync.secretwish);
     app.get('/inventory/gps', inventorysync.gps, inventorysync.gps);
