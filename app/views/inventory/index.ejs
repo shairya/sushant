@@ -1,24 +1,53 @@
 <html>
     <head><title>Unicommerce - <%=title%></title></head>
     <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/javascript" src="/js/custom.js"></script>
     <body>
-
         <h3>Unicommerce - Maven: Inventory Sync</h3>
-        
         <hr/>
-        <table class="tableClass" cellspacing="30">
-            <tr>
-                    
-                <th colspan="4">Inventory Sync</th><th><a href='/inventory'>Refresh Count</a></th>
+        <a href="/orders" class="pullRight">Orders</a>
+        <div id="spinner" style="display:none" >Do NOT refresh page.<img src="/img/ajax-loader.gif" alt="loading"></div>
+        <table class="tableClass" cellspacing="30" id="contentTable">
+            <tr>  
+                <th colspan="4">Import Inventory</th><th><a href="/inventory/log">View Error Log</a></th>
             </tr>
             <tr>
-                <td><a href="/inventory/secretwish">Secretwish</a> (<%=secretwishCount%>)</td>
-                <td><a href="/inventory/gps">Grandpitstop</a> (<%=gpsCount%>)</td>
-                <td><a href="/inventory/jerado">Jerado</a> (<%=jeradoCount%>)</td>
-                <td><a href="/inventory/markmediums">Markmediums</a> (<%=markmediumsCount%>)</td>
-                <td><a href="/inventory/anscommerce">Anscommerce</a> (<%=anscommerceCount%>)</td>
+                <td>
+                    <a href="/inventory/import/secretwish" onclick="loadSpinner()">Secretwish</a> (<%=secretwishCount%>)
+                </td>
+                <td>
+                    <a href="/inventory/import/gps" onclick="loadSpinner()">Grandpitstop</a> (<%=gpsCount%>)
+                </td>
+                <td>
+                    <a href="/inventory/import/jerado" onclick="loadSpinner()">Jerado</a> (<%=jeradoCount%>)
+                </td>
+                <td>
+                    <a href="/inventory/import/markmediums" onclick="loadSpinner()">Markmediums</a> (<%=markmediumsCount%>)
+                </td>
+                <td>
+                    <a href="/inventory/import/anscommerce" onclick="loadSpinner()">Anscommerce</a> (<%=anscommerceCount%>)
+                </td>
             </tr>
-            <tr><th colspan="5"><a href="/inventory/log">View Error Log</a></th></tr>
+            <tr>  
+                <th colspan="5">Sync Inventory</th>
+            </tr>
+            <tr>
+                <td>
+                    <a href="/inventory/sync/secretwish" onclick="loadSpinner()">Secretwish</a> (<%=remainingSecretwishCount%>)
+                </td>
+                <td>
+                    <a href="/inventory/sync/gps" onclick="loadSpinner()">Grandpitstop</a> (<%=remainingGpsCount%>)
+                </td>
+                <td>
+                    <a href="/inventory/sync/jerado" onclick="loadSpinner()">Jerado</a> (<%=remainingJeradoCount%>)
+                </td>
+                <td>
+                    <a href="/inventory/sync/markmediums" onclick="loadSpinner()">Markmediums</a> (<%=remainingMarkmediumsCount%>)
+                </td>
+                <td>
+                    <a href="/inventory/sync/anscommerce" onclick="loadSpinner()">Anscommerce</a> (<%=remainingAnscommerceCount%>)
+                </td>
+            </tr>
         </table>
     </body>
 </html>

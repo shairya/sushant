@@ -9,7 +9,7 @@ var returns = require ('../app/controllers/return');
 var returnpush = require ('../app/controllers/returnpush');
 var scrapereturn = require ('../app/controllers/scrapereturn');
 var inventory = require ('../app/controllers/inventory');
-var inventorysync = require ('../app/controllers/inventorysync');
+// var inventorysync = require ('../app/controllers/inventorysync');
 
 //you can include all your controllers
 
@@ -45,11 +45,17 @@ module.exports = function (app, passport) {
     app.get('/inventory', inventory.index, inventory.index);
     
     
-    app.get('/inventory/secretwish', inventorysync.secretwish, inventorysync.secretwish);
-    app.get('/inventory/gps', inventorysync.gps, inventorysync.gps);
-    app.get('/inventory/markmediums', inventorysync.markmediums, inventorysync.markmediums);
-    app.get('/inventory/jerado', inventorysync.jerado, inventorysync.jerado);
-    app.get('/inventory/anscommerce', inventorysync.anscommerce, inventorysync.anscommerce);
+    app.get('/inventory/import/secretwish', inventory.importSecretwishInventory, inventory.importSecretwishInventory);
+    app.get('/inventory/import/gps', inventory.importGPSInventory, inventory.importGPSInventory);
+    app.get('/inventory/import/markmediums', inventory.importMarkmediumsInventory, inventory.importMarkmediumsInventory);
+    app.get('/inventory/import/jerado', inventory.importJeradoInventory, inventory.importJeradoInventory);
+    app.get('/inventory/import/anscommerce', inventory.importAnscommerceInventory, inventory.importAnscommerceInventory);
+
+    app.get('/inventory/sync/secretwish', inventory.syncSecretwishInventory, inventory.syncSecretwishInventory);
+    app.get('/inventory/sync/gps', inventory.syncGPSInventory, inventory.syncGPSInventory);
+    app.get('/inventory/sync/markmediums', inventory.syncMarkmediumsInventory, inventory.syncMarkmediumsInventory);
+    app.get('/inventory/sync/jerado', inventory.syncJeradoInventory, inventory.syncJeradoInventory);
+    app.get('/inventory/sync/anscommerce', inventory.syncAnscommerceInventory, inventory.syncAnscommerceInventory);
 
     app.get('/orders', maven.index, maven.index);
 

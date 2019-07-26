@@ -198,3 +198,8 @@ textarea, .inputBox{padding:5px;width:50%}
 td.notEdited{color:#ff0000}
 .pullRight{float:right}
 .underline{text-decoration: underline}
+#spinner{
+	position: fixed;
+	top:50%;
+	left:45%;
+}
