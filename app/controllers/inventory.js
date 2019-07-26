@@ -36,7 +36,6 @@ async function getInventoryData(){
 }
 
 async function syncInventoryData(){
-    console.log(inventoryData);
     if(inventoryData.length){
         console.log('lets login for inventory............');
         const USERNAME_SELECTOR = '#username';
