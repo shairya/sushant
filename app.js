@@ -71,39 +71,39 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 // routes ======================================================================
 require('./config/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
-cron.schedule("0 0 */3 * * *",()=> {
-    request( constant.host+'/inventory/secretwish', function (error, response, body) {
-       if (error){ console.log('error.....'+error) }
-       else{ console.log(body) }
-    });
-});
+// cron.schedule("0 0 */3 * * *",()=> {
+//     request( constant.host+'/inventory/secretwish', function (error, response, body) {
+//        if (error){ console.log('error.....'+error) }
+//        else{ console.log(body) }
+//     });
+// });
 
-cron.schedule("0 10 */3 * * *",()=> {
-    request( constant.host+'/inventory/gps', function (error, response, body) {
-       if (error){ console.log('error.....'+error) }
-       else{ console.log(body) }
-    });
-});
-cron.schedule("0 15 */3 * * *",()=> {
-    request( constant.host+'/inventory/jerado', function (error, response, body) {
-       if (error){ console.log('error.....'+error) }
-       else{ console.log(body) }
-    });
-});
+// cron.schedule("0 10 */3 * * *",()=> {
+//     request( constant.host+'/inventory/gps', function (error, response, body) {
+//        if (error){ console.log('error.....'+error) }
+//        else{ console.log(body) }
+//     });
+// });
+// cron.schedule("0 15 */3 * * *",()=> {
+//     request( constant.host+'/inventory/jerado', function (error, response, body) {
+//        if (error){ console.log('error.....'+error) }
+//        else{ console.log(body) }
+//     });
+// });
 
-cron.schedule("0 20 */3 * * *",()=> {
-    request( constant.host+'/inventory/markmediums', function (error, response, body) {
-       if (error){ console.log('error.....'+error) }
-       else{ console.log(body) }
-    });
-});
+// cron.schedule("0 20 */3 * * *",()=> {
+//     request( constant.host+'/inventory/markmediums', function (error, response, body) {
+//        if (error){ console.log('error.....'+error) }
+//        else{ console.log(body) }
+//     });
+// });
 
-cron.schedule("0 30 */3 * * *",()=> {
-    request( constant.host+'/inventory/anscommerce', function (error, response, body) {
-       if (error){ console.log('error.....'+error) }
-       else{ console.log(body) }
-    });
-});
+// cron.schedule("0 30 */3 * * *",()=> {
+//     request( constant.host+'/inventory/anscommerce', function (error, response, body) {
+//        if (error){ console.log('error.....'+error) }
+//        else{ console.log(body) }
+//     });
+// });
 
 //launch ======================================================================
 var server = app.listen(port, function () {
