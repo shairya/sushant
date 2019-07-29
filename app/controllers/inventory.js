@@ -72,8 +72,9 @@ async function syncInventoryData(){
         for(let row of inventoryData){
             page = await browser.newPage();
             await pushInventoryData(row);
+            page.close();
         }
-        page.close();
+        
         console.log("Finished sending orders");
     }else{
         console.log('errrrrrr...........')
@@ -172,7 +173,7 @@ exports.syncAnscommerceInventory = async function(req, res, next){
 }
 
 exports.importSecretwishInventory = async function(req, res, next){
-    projectId = 2;
+    projectId = 5;
     tenantCode = constant.uniCommerceProjects[projectId].name;
     mavenLoginDomain = constant.uniCommerceProjects[projectId].mavenLoginDomain;
     await inventoryAuthRequest(tenantCode);

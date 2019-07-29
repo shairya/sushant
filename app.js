@@ -46,6 +46,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/css',express.static(__dirname +'/css'));
 app.set('views', path.join(__dirname, 'app/views'));
 app.set('view engine', 'ejs');
+app.disable('view cache');
+app.set('etag', false)
+app.use((req, res, next) => {
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private')
+    next()
+  })
 //app.set('view engine', 'ejs'); // set up ejs for templating
 
 
