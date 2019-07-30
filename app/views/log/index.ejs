@@ -19,18 +19,18 @@
         </form>
         <table class="tableClass" width="100%" border="1">
             <tr>
-                <th>Order Id</th><th>Error</th><th>Is Edited?</th><th>Action</th>
+                <th>Order Id</th> <th>Tenant</th> <th>Error</th><th>Is Edited?</th><th>Action</th>
             </tr>
             <% if(logData.length>0) { %>
                 <% for(i=0; i < logData.length; i++){ %>
                     <% if(!logData[i].edited || logData[i].edited=='no'){%>
-                        <tr><td><%= logData[i].objectId %></td><td><%= logData[i].responseData %></td><td class="notEdited">No</td><td><a href='/log/edit/<%= logData[i].objectId%>/<%= logData[i]._id%>'>Edit</a></td></tr>
+                        <tr><td><%= logData[i].objectId %></td><td><%=logData[i].tenantCode %></td><td><%= logData[i].responseData %></td><td class="notEdited">No</td><td><a href='/log/edit/<%= logData[i].objectId%>/<%= logData[i]._id%>'>Edit</a></td></tr>
                     <% } else { %>
-                        <tr><td><%= logData[i].objectId %></td><td><%= logData[i].responseData %></td><td>Yes</td><td><a href='/log/edit/<%= logData[i].objectId%>/<%= logData[i]._id%>'>Edit</a></td></tr>
+                        <tr><td><%= logData[i].objectId %></td><td><%=logData[i].tenantCode %></td><td><%= logData[i].responseData %></td><td>Yes</td><td><a href='/log/edit/<%= logData[i].objectId%>/<%= logData[i]._id%>'>Edit</a></td></tr>
                     <% } %>
                 <% }%>
             <% } else {%>
-                <tr><td colspan="4">No records found</td></tr>
+                <tr><td colspan="5">No records found</td></tr>
                 <% } %>
         </table>
     </body>

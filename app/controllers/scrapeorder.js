@@ -87,7 +87,7 @@ sitelogin = async function(tenantCode){
     page = await browser.newPage();
     await page.goto(constant.url);
     await page.waitFor(5*1000);
-    
+    await page.waitForSelector(USERNAME_SELECTOR);
     await page.click(USERNAME_SELECTOR);
     await page.keyboard.type(constant.j_username);
     await page.click(PASSWORD_SELECTOR);
@@ -136,8 +136,9 @@ scrapeorders = async function(req, res, next)
     
     await page.waitFor(10*1000);
     const frame = await page.frames().find(f => f.name() === 'iframe1');
+    await frame.waitForSelector('#configName');
     await frame.select('#configName','Sale Orders');
-    await frame.waitFor(4000);
+    await frame.waitForSelector('#all');
     await frame.click('#all');
     await frame.click('#filter-1');
     await frame.click('#filter-addedOn');
