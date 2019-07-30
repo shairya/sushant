@@ -196,7 +196,8 @@ table.tableClass tr td, table.tableClass tr th {padding:5px;text-align: left}
 td.first_td{width:30%}
 textarea, .inputBox{padding:5px;width:50%}
 td.notEdited{color:#ff0000}
-.pullRight{float:right}
+.pullRight{float:right;margin-left:5px}
+.pullLeft{float: left;;margin-right:5px}
 .underline{text-decoration: underline}
 #spinner{
 	position: fixed;

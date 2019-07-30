@@ -138,6 +138,8 @@ scrapeorders = async function(req, res, next)
     const frame = await page.frames().find(f => f.name() === 'iframe1');
     await frame.waitForSelector('#configName');
     await frame.select('#configName','Sale Orders');
+
+    await frame.waitFor(4000);
     await frame.waitForSelector('#all');
     await frame.click('#all');
     await frame.click('#filter-1');

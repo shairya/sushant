@@ -1,64 +1,64 @@
 <html>
     <head><title>Unicommerce - <%=title%></title></head>
     <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/javascript" src="/js/custom.js"></script>
     <body>
 
         <h3>Unicommerce - Maven: Orders</h3>
         <hr/>
-        <a href="/inventory" class="pullRight">Sync Inventory</a>
-        <table class="tableClass" cellspacing="30">
+        <a href="/inventory" class="pullRight">Sync Inventory</a>&nbsp;<a href="/log" class="pullRight">Logs</a>
+        <div id="spinner" style="display:none" >Updating orders, Do NOT refresh page.<br/><img src="/img/ajax-loader.gif" alt="loading"></div>
+        <table class="tableClass" cellspacing="30" id="contentTable">
             <tr>
                 <th colspan="5">Import</th>
             </tr>
             <tr>
-                <td><a href="/scrapeorder/secretwish">Secretwish</a></td>
-                <td><a href="/scrapeorder/gps">Grandpitstop</a></td>
-                <td><a href="/scrapeorder/jerado">Jerado</a></td>
-                <td><a href="/scrapeorder/markmediums">Markmediums</a></td>
-                <td><a href="/scrapeorder/anscommerce">Anscommerce</a></td>
+                <td><a href="/scrapeorder/secretwish" onclick="loadSpinner()">Secretwish</a></td>
+                <td><a href="/scrapeorder/gps" onclick="loadSpinner()">Grandpitstop</a></td>
+                <td><a href="/scrapeorder/jerado" onclick="loadSpinner()">Jerado</a></td>
+                <td><a href="/scrapeorder/markmediums" onclick="loadSpinner()">Markmediums</a></td>
+                <td><a href="/scrapeorder/anscommerce" onclick="loadSpinner()">Anscommerce</a></td>
+            </tr>
+            <tr>
+                <th colspan="5">Export</th>
+            </tr>
+            <tr>
+                <td>
+                    <% if(secretwishCount==0) {%>
+                        Secretwish (<%=secretwishCount%>)
+                    <% } else{ %>
+                        <a href="/mavenpush/secretwish" onclick="loadSpinner()">Secretwish</a> (<%=secretwishCount%>)
+                    <% } %>
+                </td>
+                <td>
+                    <% if(gpsCount==0) {%>
+                        Grandpitstop (<%=gpsCount%>)
+                    <% } else{ %>
+                        <a href="/mavenpush/gps" onclick="loadSpinner()">GPS</a> (<%=gpsCount%>)
+                    <% } %>
+                </td>
+                <td>
+                    <% if(jeradoCount==0) {%>
+                        Jerado (<%=jeradoCount%>)
+                    <% } else{ %>
+                        <a href="/mavenpush/jerado" onclick="loadSpinner()">Jerado</a> (<%=jeradoCount%>)
+                    <% } %>
+                </td>
+                <td>
+                    <% if(markmediumsCount==0) {%>
+                        Markmediums (<%=markmediumsCount%>)
+                    <% } else{ %>
+                        <a href="/mavenpush/markmediums" onclick="loadSpinner()">Markmediums</a> (<%=markmediumsCount%>)
+                    <% } %>
+                </td>
+                <td>
+                    <% if(anscommerceCount==0) {%>
+                        AnsCommerce (<%=anscommerceCount%>)
+                    <% } else{ %>
+                        <a href="/mavenpush/anscommerce" onclick="loadSpinner()">Anscommerce</a> (<%=anscommerceCount%>)
+                    <% } %>
+                </td>
             </tr>
         </table>
-        <table class="tableClass" cellspacing="30">
-                <tr>
-                    <th colspan="5">Export</th>
-                </tr>
-                <tr>
-                    <td>
-                        <% if(secretwishCount==0) {%>
-                            Secretwish (<%=secretwishCount%>)
-                        <% } else{ %>
-                            <a href="/mavenpush/secretwish">Secretwish</a> (<%=secretwishCount%>)
-                        <% } %>
-                    </td>
-                    <td>
-                        <% if(gpsCount==0) {%>
-                            Grandpitstop (<%=gpsCount%>)
-                        <% } else{ %>
-                            <a href="/mavenpush/gps">GPS</a> (<%=gpsCount%>)
-                        <% } %>
-                    </td>
-                    <td>
-                        <% if(jeradoCount==0) {%>
-                            Jerado (<%=jeradoCount%>)
-                        <% } else{ %>
-                            <a href="/mavenpush/jerado">Jerado</a> (<%=jeradoCount%>)
-                        <% } %>
-                    </td>
-                    <td>
-                        <% if(markmediumsCount==0) {%>
-                            Markmediums (<%=markmediumsCount%>)
-                        <% } else{ %>
-                            <a href="/mavenpush/markmediums">Markmediums</a> (<%=markmediumsCount%>)
-                        <% } %>
-                    </td>
-                    <td>
-                        <% if(anscommerceCount==0) {%>
-                            AnsCommerce (<%=anscommerceCount%>)
-                        <% } else{ %>
-                            <a href="/mavenpush/anscommerce">Anscommerce</a> (<%=anscommerceCount%>)
-                        <% } %>
-                    </td>
-                </tr>
-            </table>
     </body>
 </html>

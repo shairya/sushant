@@ -8,6 +8,7 @@
         <h3>Unicommerce - Maven</h3>
         <% if(msg) {%><%=msg%><%}%>
         Total records with error: <%=logData.length %>
+        <a class="pullLeft" href="/orders">Orders</a><a class="pullLeft" href="/inventory">Sync Inventory</a>
         <form action="/log">
             Show: <select name="recordType" onchange="this.form.submit()">
                 <option value="" <% if (recordType==''){ %>selected <% } %>>All</option>
