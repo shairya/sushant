@@ -82,7 +82,7 @@ sitelogin = async function(tenantCode){
     const BUTTON_SELECTOR = '#loginForm > input.loginButton';
     
     browser = await puppeteer.launch({
-        headless: true
+        headless: false
     });
     page = await browser.newPage();
     await page.goto(constant.url);
@@ -103,11 +103,19 @@ scrapeorders = async function(req, res, next)
     console.log('scraping orders........')
     await page.waitFor(5*1000);     
     tenantCode = constant.uniCommerceProjects[projectId].name;
-    const DATE_RANGE_SELECTOR = 'body > div:nth-child(16) > div.ranges > ul > li:nth-child(5)';        
-    var PROJECT_LIST_PAGE = 'https://auth.unicommerce.com';
-    var PROJECT_SELECTOR = '#accountsListContainer > div:nth-child('+projectId+') > div';
-    var OTHER_REPORT_URL = 'https://' + tenantCode + '.unicommerce.com/tasks/export';
-    var EXPORT_JOBS_URL = 'https://' + tenantCode + '.unicommerce.com/data/user/exportJobs';
+    const DATE_RANGE_SELECTOR = 'body > div:nth-child(16) > div.ranges > ul > li:nth-child(7)';   
+    // const DATE_FROM_SELECTOR = 'body > div:nth-child(16) > div.ranges > div > div.daterangepicker_start_input > input';
+    // const DATE_TO_SELECTOR = 'body > div:nth-child(16) > div.ranges > div > div.daterangepicker_end_input > input';
+    const CUSTOM_DATE_APPLY_BUTTON = 'body > div:nth-child(16) > div.ranges > div > button.btn.btn-small.btn-success.applyBtn';
+    const PROJECT_SELECTOR = '#accountsListContainer > div:nth-child('+projectId+') > div';
+    const OTHER_REPORT_URL = 'https://' + tenantCode + '.unicommerce.com/tasks/export';
+    const EXPORT_JOBS_URL = 'https://' + tenantCode + '.unicommerce.com/data/user/exportJobs';
+
+    var startDate = getCurrentDate();
+    var dt = new Date();
+    dt.setDate( dt.getDate() - 4 );
+    var endDateArray = dt.toISOString().substring(0, 10).split('-');
+    var endDate = [endDateArray[2], endDateArray[1], endDateArray[0]].join('/');
     
     console.log('lets select project '+ tenantCode + '..............');
     try{
@@ -144,9 +152,11 @@ scrapeorders = async function(req, res, next)
     await frame.click('#all');
     await frame.click('#filter-1');
     await frame.click('#filter-addedOn');
-    
+    await frame.type('#filter-addedOn', endDate + ' - ' + startDate);
     await frame.click(DATE_RANGE_SELECTOR);
-    
+    await frame.waitFor(5000);  
+    await frame.click(CUSTOM_DATE_APPLY_BUTTON); 
+    // await frame 
     await frame.click('#filter-5');
     await frame.select('#filter-status', 'CREATED','FULFILLABLE','UNFULFILLABLE','DISPATCHED');
     await frame.click('#createJob');
@@ -175,10 +185,7 @@ scrapeorders = async function(req, res, next)
     await page.waitFor(5000);
     console.log('read csv file.............');
     var filename = tenantCode + '_Sale_Orders_' + Math.round((new Date()).getTime() / 1000) + '.csv';
-    console.log(filename);
-    console.log(fileUrl)
     var dest = __dirname.replace('/app/controllers','') + '/public/downloads/orders/' + filename;
-    console.log(dest);
     var file = await downloadFile(fileUrl, dest, filename);
 
     const results=[];
@@ -327,7 +334,7 @@ pushOrdersDataInDB = async function(data){
     console.log(updatedRecord + ' records updated in DB............');
 }
 
-getTodayDate = function() {
+getCurrentDate = function() {
     var d = new Date(),
         month = '' + (d.getMonth() + 1),
         day = '' + d.getDate(),
@@ -336,7 +343,7 @@ getTodayDate = function() {
     if (month.length < 2) month = '0' + month;
     if (day.length < 2) day = '0' + day;
 
-    return [year, month, day].join('-');
+    return [day, month, year].join('/');
 }
 
 downloadFile = async function(url, dest, filename){
