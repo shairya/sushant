@@ -82,14 +82,25 @@ sitelogin = async function(tenantCode){
     const BUTTON_SELECTOR = '#loginForm > input.loginButton';
     
     browser = await puppeteer.launch({
-        headless: false
+        headless: true
     });
     page = await browser.newPage();
     await page.goto(constant.url);
     await page.waitFor(5*1000);
-    await page.waitForSelector(USERNAME_SELECTOR);
-    await page.click(USERNAME_SELECTOR);
-    await page.keyboard.type(constant.j_username);
+
+    try{
+        if (await page.waitForSelector(USERNAME_SELECTOR)) {
+            await page.click(USERNAME_SELECTOR);
+            await page.keyboard.type(constant.j_username);
+        }
+    }
+    catch(e) {
+        console.log('error, login form not loaded');
+        page.close();
+        return;
+    }
+
+    
     await page.click(PASSWORD_SELECTOR);
     await page.keyboard.type(constant.j_password);
     const response = await page.click(BUTTON_SELECTOR);
@@ -144,12 +155,31 @@ scrapeorders = async function(req, res, next)
     
     await page.waitFor(10*1000);
     const frame = await page.frames().find(f => f.name() === 'iframe1');
-    await frame.waitForSelector('#configName');
-    await frame.select('#configName','Sale Orders');
+    try{
+        if(await frame.waitForSelector('#configName')){
+            await frame.select('#configName','Sale Orders');
+        }
+    }catch(e){
+        console.log('dropdown not found');
+        return;
+    }
+    
+    
 
     await frame.waitFor(4000);
-    await frame.waitForSelector('#all');
-    await frame.click('#all');
+    // await frame.waitForSelector('#all');
+    // await frame.click('#all');
+
+    try{
+        if (await frame.waitForSelector('#all')) {
+            await frame.click('#all');
+        }
+    }
+    catch(e) {
+        console.log('error, login form not loaded');
+        return;
+    }
+
     await frame.click('#filter-1');
     await frame.click('#filter-addedOn');
     await frame.type('#filter-addedOn', endDate + ' - ' + startDate);
