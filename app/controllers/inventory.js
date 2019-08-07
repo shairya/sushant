@@ -54,8 +54,22 @@ async function syncInventoryData(){
         await page.goto(constant.url);
         await page.waitFor(4*1000);
         
-        await page.click(USERNAME_SELECTOR);
-        await page.keyboard.type(constant.j_username);
+        // await page.click(USERNAME_SELECTOR);
+        // await page.keyboard.type(constant.j_username);
+
+        try{
+            if (await page.waitForSelector(USERNAME_SELECTOR)) {
+                await page.click(USERNAME_SELECTOR);
+                await page.keyboard.type(constant.j_username);
+            }
+        }
+        catch(e) {
+            console.log('error, login form not loaded');
+            page.close();
+            return;
+        }
+
+
         await page.click(PASSWORD_SELECTOR);
         await page.keyboard.type(constant.j_password);
         const response = await page.click(BUTTON_SELECTOR);
