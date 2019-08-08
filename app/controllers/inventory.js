@@ -52,7 +52,7 @@ async function syncInventoryData(){
         });  
         
         await page.goto(constant.url);
-        await page.waitFor(4*1000);
+        await page.waitFor(10*1000);
         
         // await page.click(USERNAME_SELECTOR);
         // await page.keyboard.type(constant.j_username);

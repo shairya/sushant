@@ -86,7 +86,7 @@ sitelogin = async function(tenantCode){
     });
     page = await browser.newPage();
     await page.goto(constant.url);
-    await page.waitFor(5*1000);
+    await page.waitFor(10*1000);
 
     try{
         if (await page.waitForSelector(USERNAME_SELECTOR)) {
