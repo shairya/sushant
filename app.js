@@ -71,6 +71,12 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 // routes ======================================================================
 require('./config/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
+cron.schedule("0 0 06 * * *",()=> {
+    request( constant.host+'/restart', function (error, response, body) {
+       if (error){ console.log('unable to shutdown.....'+error) }
+       else{ console.log('server restart done') }
+    });
+});
 // cron.schedule("0 0 */3 * * *",()=> {
 //     request( constant.host+'/inventory/secretwish', function (error, response, body) {
 //        if (error){ console.log('error.....'+error) }
