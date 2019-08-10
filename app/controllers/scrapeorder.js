@@ -196,9 +196,15 @@ scrapeorders = async function(req, res, next)
     await page.goto(EXPORT_JOBS_URL);
     await page.waitFor(3000);
 
-    innerText = await page.evaluate(() =>  {
-        return JSON.parse(document.querySelector("body").innerText); 
-    }); 
+    try{
+        innerText = await page.evaluate(() =>  {
+            return JSON.parse(document.querySelector("body").innerText); 
+        }); 
+    }catch(e){
+        console.log('invalid order api response');
+        console.log(document.querySelector("body").innerText);
+        return;
+    }
     console.log('get the latest report file...............');
     var fileUrl = '';
     if(innerText.successful==true){
