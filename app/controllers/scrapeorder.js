@@ -1,6 +1,6 @@
 var https = require('https');
 const csv = require('csv-parser');  
-const moment = require('moment-timezone');
+// const moment = require('moment-timezone');
 const fs = require('fs');
 const puppeteer = require('puppeteer');
 var OrderModel = require('../models/order');
@@ -18,7 +18,6 @@ exports.secretwish = async function(req, res, next){
     }else{
         console.log('import is not enable for.....' + tenantCode)
     }
-    
     res.redirect('/orders');
     return;
 }
@@ -84,6 +83,7 @@ sitelogin = async function(tenantCode){
     browser = await puppeteer.launch({
         headless: true
     });
+    
     page = await browser.newPage();
     await page.goto(constant.url);
     await page.waitFor(10*1000);
@@ -96,17 +96,16 @@ sitelogin = async function(tenantCode){
     }
     catch(e) {
         console.log('error, login form not loaded');
-        page.close();
+        await page.close();
+        await browser.close();
         return;
     }
-
     
     await page.click(PASSWORD_SELECTOR);
     await page.keyboard.type(constant.j_password);
     const response = await page.click(BUTTON_SELECTOR);
-    console.log('login done..............'+response);
+    console.log('login done..............');
     await scrapeorders();
-
 }
 
 scrapeorders = async function(req, res, next)
@@ -115,8 +114,6 @@ scrapeorders = async function(req, res, next)
     await page.waitFor(5*1000);     
     tenantCode = constant.uniCommerceProjects[projectId].name;
     const DATE_RANGE_SELECTOR = 'body > div:nth-child(16) > div.ranges > ul > li:nth-child(7)';   
-    // const DATE_FROM_SELECTOR = 'body > div:nth-child(16) > div.ranges > div > div.daterangepicker_start_input > input';
-    // const DATE_TO_SELECTOR = 'body > div:nth-child(16) > div.ranges > div > div.daterangepicker_end_input > input';
     const CUSTOM_DATE_APPLY_BUTTON = 'body > div:nth-child(16) > div.ranges > div > button.btn.btn-small.btn-success.applyBtn';
     const PROJECT_SELECTOR = '#accountsListContainer > div:nth-child('+projectId+') > div';
     const OTHER_REPORT_URL = 'https://' + tenantCode + '.unicommerce.com/tasks/export';
@@ -133,6 +130,8 @@ scrapeorders = async function(req, res, next)
         await page.click(PROJECT_SELECTOR);
     }catch(e){
         console.log('Unable to select project ' + tenantCode + '......!');
+        await page.close();
+        await browser.close();
         return;
     }
     await page.waitFor(5*1000);
@@ -161,15 +160,12 @@ scrapeorders = async function(req, res, next)
         }
     }catch(e){
         console.log('dropdown not found');
+        await page.close();
+        await browser.close();
         return;
     }
-    
-    
 
     await frame.waitFor(4000);
-    // await frame.waitForSelector('#all');
-    // await frame.click('#all');
-
     try{
         if (await frame.waitForSelector('#all')) {
             await frame.click('#all');
@@ -177,6 +173,8 @@ scrapeorders = async function(req, res, next)
     }
     catch(e) {
         console.log('error, login form not loaded');
+        await page.close();
+        await browser.close();
         return;
     }
 
@@ -186,7 +184,6 @@ scrapeorders = async function(req, res, next)
     await frame.click(DATE_RANGE_SELECTOR);
     await frame.waitFor(5000);  
     await frame.click(CUSTOM_DATE_APPLY_BUTTON); 
-    // await frame 
     await frame.click('#filter-5');
     await frame.select('#filter-status', 'CREATED','FULFILLABLE','UNFULFILLABLE','DISPATCHED');
     await frame.click('#createJob');
@@ -203,6 +200,8 @@ scrapeorders = async function(req, res, next)
     }catch(e){
         console.log('invalid order api response');
         console.log(document.querySelector("body").innerText);
+        await page.close();
+        await browser.close();
         return;
     }
     console.log('get the latest report file...............');
@@ -234,14 +233,13 @@ scrapeorders = async function(req, res, next)
             pushOrdersDataInDB(results);
     });
     
-    page.close();
-    // res.send('done..........!');
+    await page.close();
+    await browser.close();
     return;
 }
 
 pushOrdersDataInDB = async function(data){
     var updatedRecord = 0;
-    
     OrderModel.deleteMany({Tenant_Code:tenantCode}, function(err) {
         if(err) throw err;
     });  

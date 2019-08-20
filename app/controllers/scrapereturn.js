@@ -95,7 +95,8 @@ login = async function(tenantCode){
     }
     catch(e) {
         console.log('error, login form not loaded');
-        page.close();
+        await page.close();
+        await browser.close();
         return;
     }
 
@@ -104,7 +105,6 @@ login = async function(tenantCode){
     const response = await page.click(BUTTON_SELECTOR);
     console.log('login done..............');
     await scrapereturns();
-
 }
 
 function getDateRange() {
@@ -214,7 +214,8 @@ scrapereturns = async function(req, res, next)
         .on('end', () => {
             pushDataInDB(results);
     });
-    page.close();
+    await page.close();
+    await browser.close();
     return;
 }
 
