@@ -22,7 +22,7 @@
     "http-proxy": "latest",
     "md5": "latest",
     "mime": "latest",
-    "moment-timezone": "^0.5.25",
+    "moment-timezone": "^0.5.35",
     "mongoose": "latest",
     "morgan": "^1.9.1",
     "multer": "latest",
